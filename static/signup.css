@@ -34,7 +34,7 @@ body {
     background-color: #3274d6;
     color: #ffffff;
 }
-.signup form input[type="password"], .login form input[type="text"]{
+.signup form input[type="password"], .signup form input[type="text"]{
     width: 310px;
     height: 50px;
     border: 1px solid #dee0e4;
