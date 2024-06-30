@@ -65,7 +65,7 @@ app.post('/auth', function(request, response){
                 response.redirect('/home');
             } else {
                 // loadLoginPage(response, 'Incorrect Username and/or Password!');
-                response.send('Incorrect Username and/or Password!');
+                response.redirect('/');
             }
             response.end();
         });
