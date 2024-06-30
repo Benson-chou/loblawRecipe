@@ -64,14 +64,14 @@ app.post('/auth', function(request, response){
                 // Redirect to home page
                 response.redirect('/home');
             } else {
-                loadLoginPage(response, 'Incorrect Username and/or Password!');
-                // response.send('Incorrect Username and/or Password!');
+                // loadLoginPage(response, 'Incorrect Username and/or Password!');
+                response.send('Incorrect Username and/or Password!');
             }
             response.end();
         });
     } else {
-        loadLoginPage(response, 'Please enter Username and Password!');
-        // response.send('Please enter Username and Password!');
+        // loadLoginPage(response, 'Please enter Username and Password!');
+        response.send('Please enter Username and Password!');
         response.end();
     }
 });
