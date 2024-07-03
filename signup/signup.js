@@ -1,42 +1,48 @@
-var a = require('../login');
+const express = require('express');
+const path = require('path');
+const router = express.Router();
+const mysql = require('mysql2');
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'loblaw-recipe'
+});
+
+connection.connect();
 
 // http://localhost:3000/signup
-app.get('/signup', function(request, response) {
+router.get('/', function(request, response) {
 	// Render login template
-	response.sendFile(path.join(__dirname + '/signup/signup.html'));
+	response.sendFile(path.join(__dirname + '/signup.html'));
 });
 
-// http://localhost:3000/signup/auth
-a.app.post('/signup/auth', function(request, response){
-    // Capture the input fields
-    let username = request.body.username;
-    let password = request.body.password;
-    let postalCode = request.body.postalCode;
-    let allergies = request.body.allergies
 
-    //Ensure the input fields exists and are not empty
-    if (username && password){
-        // Execute SQL query that'll select account from database
-        a.connection.query('SELECT * FROM user WHERE username = ?', [username], function(error, results, fields){
-            if (error) throw error;
-            // If this account already exists
-            if (results.length > 0){
-                // Need to output the following message
-                response.send('This username is taken. Please insert another username')
-            } else {
-                a.connection.query('INSERT INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)', 
-                   [username, password, postalCode, allergies], function(error, fields){
-                        if (error) throw error;
-                        response.send('User ' + username + ' has been created.')
-                        response.redirect('/home');
-                   }
-                )}
-            response.end();
-        });
-    }
+router.post('/', (req, res) => {
+    const { username, password, postalCode, allergies } = req.body;
+    connection.query('SELECT * FROM user WHERE username = ?', [username], function (error, results) {
+        console.log("checked username")
+        if (error) throw error;
+        // If this account already exists
+        if (results.length > 0) {
+            // Need to output the following message
+            res.send('This username is taken. Please insert another username')
+            res.redirect('/')
+        } else {
+            connection.query('INSERT INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)',
+                [username, password, postalCode, allergies], function (error) {
+                    if (error) throw error;
+                    console.log(`User ${username} has been created.`)
+                    res.redirect('/home');
+                }
+            )
+        }
+    });
 });
+
 // http://localhost:3000/home
-a.app.get('/home', function(request, response) {
+router.get('/home', function(request, response) {
 	// If the user is loggedin
 	if (request.session.loggedin) {
 		// Output username
@@ -47,6 +53,5 @@ a.app.get('/home', function(request, response) {
 	}
 	response.end();
 });
-a.app.listen(3000, function(){
-    console.log("At Sign up page")
-})
+
+module.exports = router;

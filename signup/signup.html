@@ -13,7 +13,7 @@
 	<body>
 		<div class="signup">
 			<h1>Signup</h1>
-			<form action="/signup/auth" method="post">
+			<form id="signupForm" action="/signup" method="post">
 				<label for="username">
 					<!-- font awesome icon -->
 					<i class="fas fa-user"></i>
@@ -31,7 +31,7 @@
                     <i class="fas fa-circle-exclamation"></i>
                 </label>
                 <input type="text" name="Allergies" placeholder="Allergies: Nuts, diary...etc." id="allergies">
-				<input type="submit" value="Sign Up">
+				<input type="submit" name="signup" value="Sign Up">
 			</form>
 		</div>
 	</body>
