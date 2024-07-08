@@ -1,5 +1,4 @@
-<!-- DOCTYPE html -->
-<html>
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
@@ -23,7 +22,6 @@
 								<img class="text-logo" src="/GitHub_Logo_White.png" alt="GitHub Text Logo">
 							</a>
 						</div>
-						
 					</li>
 				</ul>
 			</div>
@@ -41,9 +39,13 @@
 					<i class="fas fa-lock"></i>
 				</label>
 				<input type="password" name="password" placeholder="Password" id="password" required>
+				<% if(message.length > 0) {%>
+					<div class="alert-fail">
+						<%= message %>
+					</div>
+				<% } %>
 				<input type="submit" name="login" value="Login">
 				<a href="../signup/" id="button" type="submit">Don't have an account yet? Join us!</a>
 			</form>
 		</div>
 	</body>
-</html>

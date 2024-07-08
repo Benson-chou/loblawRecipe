@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mysql = require('mysql2');
+const session = require('express-session')
+const flash = require('connect-flash')
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -12,10 +14,17 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
+router.use(session({
+    secret: 'secret', 
+    resave: false, 
+    saveUninitialized: true
+}));
+router.use(flash())
+
 // http://localhost:3000/login
 router.get('/', function(request, response){
     // Render login template
-    response.sendFile(path.join(__dirname + '/login/login.html'));
+    response.render(path.join(__dirname + '/login/login.ejs'), { message : request.flash('message')});
 });
 
 // Get the loginForm informations
@@ -34,8 +43,7 @@ router.post('/', (req, res) => {
             // Redirect to home page
             res.redirect('/home');
         } else {
-            // loadLoginPage(response, 'Incorrect Username and/or Password!');
-            alert('Incorrect Username and/or Password')
+            req.flash('message', 'Incorrect Username and/or Password')
             res.redirect('/');
         }
         res.end();
