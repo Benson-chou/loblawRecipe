@@ -1,14 +1,20 @@
+:root {
+    --theme-color: #3274d6;
+    --font-color: #ffffff
+}
+
 * {
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
     font-size: 16px;
+    margin: 0;
 }
 body {
     background-color: #435165;
 }
 .signup {
     width: 400px;
-    background-color: #ffffff;
+    background-color: var(--font-color);
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     margin: 100px auto;
 }
@@ -31,8 +37,8 @@ body {
     align-items: center;
     width: 50px;
     height: 50px;
-    background-color: #3274d6;
-    color: #ffffff;
+    background-color: var(--theme-color);
+    color: var(--font-color);
 }
 .signup form input[type="password"], .signup form input[type="text"]{
     width: 310px;
@@ -45,14 +51,65 @@ body {
     width: 100%;
     padding: 15px;
    margin-top: 20px;
-    background-color: #3274d6;
+    background-color: var(--theme-color);
     border: 0;
     cursor: pointer;
     font-weight: bold;
-    color: #ffffff;
+    color: var(--font-color);
     transition: background-color 0.2s;
 }
+
+.signup form [type="text"]:focus,
+.signup form [type="password"]:focus {
+    border: 2.5px solid #22cfc9;
+    outline: transparent;
+    border-radius: 6px;
+    box-shadow: 0 0 10px #719ECE;
+}
+
 .signup form input[type="submit"]:hover {
-  background-color: #2868c7;
+  background-color: #1eb4af;
     transition: background-color 0.2s;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--theme-color);
+    padding: 2vh;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    color: var(--font-color);
+    font-weight: bold;
+}
+
+.header .links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3rem;
+}
+
+.header ul {
+    list-style-type: none;
+}
+
+.header a, a:visited {
+    text-decoration: none;
+    color: var(--font-color);
+}
+
+.header .github {
+    display: flex;
+}
+
+.header .text-logo {
+    width: 3.5rem;
+}
+
+.header .cat-logo {
+    width: 1.8rem;
 }

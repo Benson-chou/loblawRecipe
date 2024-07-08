@@ -1,5 +1,5 @@
 :root {
-    --theme-color: #2868c7;
+    --theme-color: #3274d6;
     --font-color: #ffffff
 }
 
@@ -15,7 +15,7 @@ body {
 }
 .login {
     width: 400px;
-    background-color: #ffffff;
+    background-color: var(--font-color);
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     margin: 100px auto;
 }
@@ -41,6 +41,7 @@ body {
     background-color: var(--theme-color);
     color: var(--font-color);
 }
+
 .login form input[type="password"], .login form input[type="text"] {
     width: 310px;
     height: 50px;
@@ -59,8 +60,17 @@ body {
     color: var(--font-color);
     transition: background-color 0.2s;
 }
-.login form input[type="submit"]:hover {
-  background-color: var(--theme-color);
+
+.login form [type="text"]:focus,
+.login form [type="password"]:focus {
+    border: 2.5px solid #22cfc9;
+    outline: transparent;
+    border-radius: 6px;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.login form [type="submit"]:hover {
+  background-color: #1eb4af;
     transition: background-color 0.2s;
 }
 
@@ -109,4 +119,10 @@ body {
 
 .header .cat-logo {
     width: 1.8rem;
+}
+
+.alert-fail {
+    background-color: rgb(247, 56, 56);
+    color: var(--font-color);
+    padding: 5px 10px;
 }
