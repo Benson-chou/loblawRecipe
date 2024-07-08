@@ -51,7 +51,9 @@
                 <input type="text" name="Allergies" placeholder="Allergies: Nuts, diary...etc." id="allergies">
 				<% if(message.length > 0) {%>
 					<div class="alert-fail">
-						<%= message %>
+						<div class="alert-text">
+							<%= message %>
+						</div>
 					</div>
 				<% } %>
 				<input type="submit" name="signup" value="Sign Up">

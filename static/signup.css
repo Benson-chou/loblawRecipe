@@ -113,3 +113,11 @@ body {
 .header .cat-logo {
     width: 1.8rem;
 }
+
+.alert-fail {
+    text-align: center;
+    background-color: rgb(247, 56, 56);
+    color: var(--font-color);
+    padding: 5px 10px;
+    width: 90%;
+}
