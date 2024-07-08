@@ -61,6 +61,14 @@ body {
     transition: background-color 0.2s;
 }
 
+.login form [type="text"]:focus,
+.login form [type="password"]:focus {
+    border: 2.5px solid #22cfc9;
+    outline: transparent;
+    border-radius: 6px;
+    box-shadow: 0 0 10px #719ECE;
+}
+
 .login form [type="submit"]:hover {
   background-color: #1eb4af;
     transition: background-color 0.2s;
