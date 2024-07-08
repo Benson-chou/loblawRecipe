@@ -62,7 +62,7 @@ body {
 }
 
 .login form [type="submit"]:hover {
-  background-color: #3422da;
+  background-color: #1eb4af;
     transition: background-color 0.2s;
 }
 
