@@ -7,6 +7,7 @@ const port = 3000;
 
 const loginRoute = require('./login/login');
 const signupRoute = require('./signup/signup');
+const homeRoute = require('./home/home')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -20,6 +21,7 @@ app.use(session({
 
 app.use("/login", loginRoute);
 app.use("/signup", signupRoute);
+app.use("/home", homeRoute);
 
 app.get('/',function (req, res) {
     res.redirect('/login');
