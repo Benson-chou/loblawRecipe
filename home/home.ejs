@@ -25,3 +25,17 @@
             </ul>
         </div>
     </div>
+    <div class="location">
+        <form id="locationBox" action="/location" method="post">
+            <label for="postal code">Location: </label>
+            <% if(location.length > 0){%>
+                <input type="text" name="postal code" value="<%= location %>">
+            <% } else{ %>
+                <input type="text" name="postal code" placeholder="Postal Code">
+            <% } %>
+        </form>
+        <!-- The table goes here -->
+    </div>
+
+    
+</body>

@@ -25,8 +25,9 @@ router.use(flash())
 router.get('/', function(request, response) {
 	// If the user is loggedin
 	if (request.session.loggedin) {
-		// Output username
-		response.send('Welcome back, ' + request.session.username + '!');
+        const query = 'SELECT * FROM user WHERE '
+		// Render the home page
+		response.render(path.join(__dirname + '/login.ejs'), { message : request.flash('message')});
         // response.render(path.join(__dirname + '/home.ejs'), { message : request.flash('message')})
 	} else {
 		// Not logged in
@@ -57,7 +58,5 @@ router.get('/', function(request, response) {
 //         res.end();
 //     });
 // })
-
-
 
 module.exports = router;
