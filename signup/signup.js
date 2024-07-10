@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mysql = require('mysql2');
-const session = require('express-session')
 const flash = require('connect-flash')
 
 const connection = mysql.createConnection({
@@ -14,11 +13,6 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-router.use(session({
-    secret: 'secret', 
-    resave: false, 
-    saveUninitialized: true
-}));
 router.use(flash())
 
 // http://localhost:3000/signup
@@ -48,19 +42,6 @@ router.post('/', (req, res) => {
             )
         }
     });
-});
-
-// http://localhost:3000/home
-router.get('/home', function(request, response) {
-	// If the user is loggedin
-	if (request.session.loggedin) {
-		// Output username
-		response.send('Welcome back, ' + request.session.username + '!');
-	} else {
-		// Not logged in
-		response.send('Please login to view this page!');
-	}
-	response.end();
 });
 
 module.exports = router;

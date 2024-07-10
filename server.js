@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const store = new session.MemoryStore();
 
 const app = express();
 const port = 3000;
@@ -14,9 +15,10 @@ app.use(express.urlencoded({ extended: true}));
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.use(session({
-    secret: 'secret', 
-    resave: false, 
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: true,
+    secret: "secret",
+    store: store
 }));
 
 app.use("/login", loginRoute);

@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mysql = require('mysql2');
-const session = require('express-session')
 const flash = require('connect-flash')
 
 const connection = mysql.createConnection({
@@ -14,26 +13,26 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-router.use(session({
-    secret: 'secret', 
-    resave: false, 
-    saveUninitialized: true
-}));
 router.use(flash())
 
 // http://localhost:3000/home
 router.get('/', function(request, response) {
 	// If the user is loggedin
 	if (request.session.loggedin) {
-        const query = 'SELECT * FROM user WHERE '
-		// Render the home page
-		response.render(path.join(__dirname + '/login.ejs'), { message : request.flash('message')});
-        // response.render(path.join(__dirname + '/home.ejs'), { message : request.flash('message')})
+        const query = 'SELECT * FROM user WHERE username = ?'
+        connection.query(query, [request.session.username], function(error, results){
+            // Output error if error
+            if (error) throw error;
+            // If username exists
+            if (results.length > 0){
+                // Render the home page with user location
+		        response.render(path.join(__dirname + '/home.ejs'), {location : results[0].preferred_location});
+            }
+        })
 	} else {
 		// Not logged in
-		response.send('Please login to view this page!');
+        response.render(path.join(__dirname + '/home.ejs'), {location: ''});
 	}
-	response.end();
 });
 
 // Get the loginForm informations
