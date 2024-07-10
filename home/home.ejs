@@ -33,9 +33,26 @@
             <% } else{ %>
                 <input type="text" name="postal code" placeholder="Postal Code">
             <% } %>
-             <!-- The table goes here -->
-              <!-- And then the parameters -->
+             
         </form>
-       
+        <!-- The table goes here -->
+              <!-- And then the parameters -->
+        <section id="table">
+        <div class="table">
+            <div id="headers">
+                <span id="itemname">Item Name</span>
+                <span id="bonuspoints">Bonus Points</span>
+                <span id="condition">Condition</span>
+            </div>
+            <% for(var i = 0; i < items.rows.length; i++) { %>
+                    <form class="tr" action="/itemForm">
+                        <input type="checkbox" name="tickbox" checked="{{this}}">
+                        <input type="text" name="itemname" class="td" value= <%= items.rows[i].itemname %>>
+                        <input type="text" name="bonuspoints" class="td" value= <%= items.rows[i].bonuspoints %>>
+                        <input type="text" name="condition" class="td" value= <%= items.rows[i].condition %>>
+                        <input type="submit" name="updateBtn" id="updateBtn" value="update" class="td">
+                    </form>
+            <% } %>     
+        </div>
     </div>
 </body>
