@@ -6,7 +6,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
     <!-- include the stylesheet file -->
     <link href="/login.css" rel="stylesheet" type="text/css">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="header-container">
         <div class="header">
@@ -33,26 +41,61 @@
             <% } else{ %>
                 <input type="text" name="postal code" placeholder="Postal Code">
             <% } %>
-             
+            <input type="submit" name="location" value="Search">
         </form>
         <!-- The table goes here -->
-              <!-- And then the parameters -->
+         <h2>Select items you want or let us pick the optimal combo for you!</h2>
         <section id="table">
-        <div class="table">
-            <div id="headers">
-                <span id="itemname">Item Name</span>
-                <span id="bonuspoints">Bonus Points</span>
-                <span id="condition">Condition</span>
+            <div class="table">
+                <form id="itemsForm" action="/process-items" method="post">
+                    <table id="headers">
+                        <thead>
+                            <th id="checkbox">Selections</th>
+                            <th id="itemname">Item Name</th>
+                            <th id="bonuspoints">Bonus Points</th>
+                            <th id="condition">Condition</th>
+                        </thead>
+                        <tbody>
+                            <% if(items){%>
+                                <% items.forEach(item=> { %>
+                                    <tr>
+                                        <td><input type="checkbox" name="selectItem"></td>
+                                        <td><%= item.itemname %></td>
+                                        <td><%= item.bonuspoints %></td>
+                                        <td><%= item.condition %></td>
+                                    </tr>
+                                <% }); %>
+                            <%} else {%>
+                                <tr>
+                                    <td rowspan="4"> Please enter a location!</td>
+                                </tr>
+                            <% }%>
+                        </tbody>
+                    </table>
+                </form>
             </div>
-            <% for(var i = 0; i < items.rows.length; i++) { %>
-                    <form class="tr" action="/itemForm">
-                        <input type="checkbox" name="tickbox" checked="{{this}}">
-                        <input type="text" name="itemname" class="td" value= <%= items.rows[i].itemname %>>
-                        <input type="text" name="bonuspoints" class="td" value= <%= items.rows[i].bonuspoints %>>
-                        <input type="text" name="condition" class="td" value= <%= items.rows[i].condition %>>
-                        <input type="submit" name="updateBtn" id="updateBtn" value="update" class="td">
-                    </form>
-            <% } %>     
-        </div>
+            <!-- <% if (items){%>
+                <% for(var i = 0; i < items.rows.length; i++) { %>
+                        <form class="tr" action="/itemForm">
+                            <input type="checkbox" name="tickbox" checked="{{this}}">
+                            <input type="text" name="itemname" class="td" value= <%= items.rows[i].itemname %>>
+                            <input type="text" name="bonuspoints" class="td" value= <%= items.rows[i].bonuspoints %>>
+                            <input type="text" name="condition" class="td" value= <%= items.rows[i].condition %>>
+                            <input type="submit" name="updateBtn" id="updateBtn" value="update" class="td">
+                        </form>
+                <% } %>   -->
+        </section>
+        <section id="parameters">
+            <label for="Creativity">Creativity: </label>
+            <input type="range" min="0" max="1" name="creativity">
+            <label for="Budget">Budget (CAD): </label>
+            <input type="text" min="0" name = budget id="budget">
+            <label for="additional"> Additional requests (Allergies):</label>
+            <% if(allergies){%>
+                <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
+            <% } else{ %>
+                <input type="text" name="allergies" placeholder="Allergies">
+            <% } %>
+        </section>
     </div>
 </body>
