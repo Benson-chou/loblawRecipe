@@ -15,6 +15,41 @@ connection.connect();
 
 router.use(flash())
 
+// This is just for testing
+const items = [
+    {
+        id: 1,
+        itemname: 'Sword of Truth',
+        bonuspoints: 10,
+        condition: 'New'
+    },
+    {
+        id: 2,
+        itemname: 'Shield of Valor',
+        bonuspoints: 8,
+        condition: 'Used'
+    },
+    {
+        id: 3,
+        itemname: 'Helmet of Wisdom',
+        bonuspoints: 5,
+        condition: 'New'
+    },
+    {
+        id: 4,
+        itemname: 'Boots of Speed',
+        bonuspoints: 7,
+        condition: 'Used'
+    },
+    {
+        id: 5,
+        itemname: 'Cloak of Invisibility',
+        bonuspoints: 12,
+        condition: 'New'
+    }
+];
+
+
 // http://localhost:3000/home
 router.get('/', function(request, response) {
 	// If the user is loggedin
@@ -26,15 +61,20 @@ router.get('/', function(request, response) {
             // If username exists
             if (results.length > 0){
                 // Render the home page with user location
-		        response.render(path.join(__dirname + '/home.ejs'), {location : results[0].preferred_location});
+		        response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, allergies: ""});
             }
         })
 	} else {
 		// Not logged in
-        response.render(path.join(__dirname + '/home.ejs'), {location: ''});
+        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : {}, allergies: ""});
 	}
 });
-
+ 
+// Get the location informations
+router.post('/location', (req, res) => {
+    const location = req.body;
+    
+})
 // Get the loginForm informations
 // router.post('/', (req, res) => {
 //     const { username, password } = req.body;

@@ -33,7 +33,7 @@
             </ul>
         </div>
     </div>
-    <div class="location">
+    <!-- <div class="location">
         <form id="locationBox" action="/location" method="post">
             <label for="postal code">Location: </label>
             <% if(location){%>
@@ -43,8 +43,9 @@
             <% } %>
             <input type="submit" name="location" value="Search">
         </form>
-        <!-- The table goes here -->
-         <h2>Select items you want or let us pick the optimal combo for you!</h2>
+    </div> -->
+    <div class="items">
+        <h2>Select items you want or let us pick the optimal combo for you!</h2>
         <section id="table">
             <div class="table">
                 <form id="itemsForm" action="/process-items" method="post">
@@ -56,7 +57,7 @@
                             <th id="condition">Condition</th>
                         </thead>
                         <tbody>
-                            <% if(items){%>
+                            <% if(items) {%>
                                 <% items.forEach(item=> { %>
                                     <tr>
                                         <td><input type="checkbox" name="selectItem"></td>
@@ -65,37 +66,28 @@
                                         <td><%= item.condition %></td>
                                     </tr>
                                 <% }); %>
-                            <%} else {%>
-                                <tr>
-                                    <td rowspan="4"> Please enter a location!</td>
-                                </tr>
-                            <% }%>
+                            <% } %>
                         </tbody>
                     </table>
                 </form>
             </div>
-            <!-- <% if (items){%>
-                <% for(var i = 0; i < items.rows.length; i++) { %>
-                        <form class="tr" action="/itemForm">
-                            <input type="checkbox" name="tickbox" checked="{{this}}">
-                            <input type="text" name="itemname" class="td" value= <%= items.rows[i].itemname %>>
-                            <input type="text" name="bonuspoints" class="td" value= <%= items.rows[i].bonuspoints %>>
-                            <input type="text" name="condition" class="td" value= <%= items.rows[i].condition %>>
-                            <input type="submit" name="updateBtn" id="updateBtn" value="update" class="td">
-                        </form>
-                <% } %>   -->
         </section>
         <section id="parameters">
-            <label for="Creativity">Creativity: </label>
-            <input type="range" min="0" max="1" name="creativity">
-            <label for="Budget">Budget (CAD): </label>
-            <input type="text" min="0" name = budget id="budget">
-            <label for="additional"> Additional requests (Allergies):</label>
-            <% if(allergies){%>
-                <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
-            <% } else{ %>
-                <input type="text" name="allergies" placeholder="Allergies">
-            <% } %>
+            <div class="table">
+                <form id="parameters" action="/parameters" method="post">
+                    <!-- test -->
+                    <label for="Creativity">Creativity: </label>
+                    <input type="range" min="0" max="1" step="0.01" name="creativity">
+                    <label for="Budget">Budget (CAD): </label>
+                    <input type="text" min="0" name = budget id="budget">
+                    <label for="additional"> Additional requests (Allergies):</label>
+                    <% if(allergies) {%>
+                        <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
+                    <% } else{ %>
+                        <input type="text" name="allergies" placeholder="Allergies">
+                    <% } %>
+                </form>
+            </div>    
         </section>
     </div>
 </body>
