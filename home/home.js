@@ -25,7 +25,7 @@ const items = [
     },
     {
         id: 2,
-        itemname: 'Shield of Valor',
+        itemname: 'Shield of Valor (Adding more to see how the box reacts)',
         bonuspoints: 8,
         condition: 'Used'
     },

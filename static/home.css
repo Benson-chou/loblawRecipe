@@ -1,0 +1,114 @@
+:root {
+    --theme-color: #3274d6;
+    --font-color: #ffffff
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
+    font-size: 16px;
+}
+
+body {
+    background-color: #435165;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--theme-color);
+    padding: 2vh;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    color: var(--font-color);
+    font-weight: bold;
+}
+
+.header .links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3rem;
+}
+
+.header ul {
+    list-style-type: none;
+}
+
+.header a, a:visited {
+    text-decoration: none;
+    color: var(--font-color);
+}
+
+.header .github {
+    display: flex;
+}
+
+.header .text-logo {
+    width: 3.5rem;
+}
+
+.header .cat-logo {
+    width: 1.8rem;
+}
+
+.items {
+    padding: 1rem;
+}
+
+.items h2 {
+    padding: 0.5rem;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 200;
+}
+
+.items #headers thead {
+    background-color: #b7c7df;
+}
+
+.items #headers tbody tr:nth-child(odd) {
+    background-color: #b7dfc3;
+}
+
+.items #headers tr:nth-child(even) {
+    background-color: #dcdfb7;
+}
+
+#parameters {
+    display: flex;
+    flex-direction: column;
+}
+
+#parameters label,
+#parameters output {
+    padding: 0.3rem;
+    margin: 0.3rem 0;
+    color: white;
+}
+
+#parameters input {
+    width: 20%;
+}
+
+#parameters input[type="text"] {
+    padding: 6px 8px;
+    margin-bottom: 1rem;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+}
+
+#parameters input[type="text"]:focus {
+    box-shadow: 4px 4px 6px black;
+}
+
+.creativity-container {
+    display: flex;
+    gap: 1rem;
+}

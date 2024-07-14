@@ -5,7 +5,7 @@
     <!-- the form awesome library is used to add icons to our form -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
     <!-- include the stylesheet file -->
-    <link href="/login.css" rel="stylesheet" type="text/css">
+    <link href="/home.css" rel="stylesheet" type="text/css">
     <style>
         table, th, td {
             border: 1px solid black;
@@ -77,8 +77,10 @@
                 <form id="parameters" action="/parameters" method="post">
                     <!-- test -->
                     <label for="Creativity">Creativity: </label>
-                    <input type="range" min="0" max="1" step="0.01" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
-                    <output>0</output>
+                    <div class="creativity-container">
+                        <input type="range" min="0" max="10" step="1" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
                     <label for="Budget">Budget (CAD): </label>
                     <input type="text" min="0" name = budget id="budget">
                     <label for="additional"> Additional requests (Allergies):</label>
