@@ -51,9 +51,9 @@
                 <form id="itemsForm" action="/process-items" method="post">
                     <table id="headers">
                         <thead>
-                            <th id="checkbox">Selections</th>
+                            <th id="checkbox"></th>
                             <th id="itemname">Item Name</th>
-                            <th id="bonuspoints">Bonus Points</th>
+                            <th id="bonuspoints">Bonus Value</th>
                             <th id="condition">Condition</th>
                         </thead>
                         <tbody>
@@ -77,7 +77,8 @@
                 <form id="parameters" action="/parameters" method="post">
                     <!-- test -->
                     <label for="Creativity">Creativity: </label>
-                    <input type="range" min="0" max="1" step="0.01" name="creativity">
+                    <input type="range" min="0" max="1" step="0.01" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
+                    <output>0</output>
                     <label for="Budget">Budget (CAD): </label>
                     <input type="text" min="0" name = budget id="budget">
                     <label for="additional"> Additional requests (Allergies):</label>
