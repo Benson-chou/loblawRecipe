@@ -13,6 +13,12 @@
             padding: 8px;
         }
     </style>
+    <script>
+        function selectAll() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(box => box.click());
+        }
+    </script>
 </head>
 
 <body>
@@ -51,7 +57,7 @@
                 <form id="itemsForm" action="/process-items" method="post">
                     <table id="headers">
                         <thead>
-                            <th id="checkbox"></th>
+                            <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
                             <th id="itemname">Item Name</th>
                             <th id="bonuspoints">Bonus Value</th>
                             <th id="condition">Condition</th>

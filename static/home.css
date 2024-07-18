@@ -112,3 +112,16 @@ body {
     display: flex;
     gap: 1rem;
 }
+
+#headers .select-all {
+    padding: 0.5vw 2vw;
+    background-color: rgb(208, 129, 199);
+    color: var(--font-color);
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    cursor: pointer;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);;
+}
