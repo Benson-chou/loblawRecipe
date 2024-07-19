@@ -16,7 +16,17 @@
     <script>
         function selectAll() {
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(box => box.click());
+            let allChecked = true;
+            for (let box of checkboxes) {
+                if (box.checked == false) allChecked = false; 
+            }
+            if (allChecked == true) {
+                checkboxes.forEach(box => box.click())
+            } else {
+                checkboxes.forEach(box => {
+                    if (box.checked == false) box.click()
+                })
+            }
         }
     </script>
 </head>
