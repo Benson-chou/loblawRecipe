@@ -20,7 +20,7 @@ parsed_data = json.loads(text)
 for d in parsed_data: 
     loblaw_item = {
         "id": d["id"], 
-        "name": d["name"],
+        "item_name": d["name"],
         "sale_story": d["sale_story"], # Where the extra points are located
         "image": d["image_url"],
         "valid_from": d["valid_from"],
@@ -39,4 +39,6 @@ food_df = df.loc[~(df['categories'].isin(['Household Supplies',
 
 # Can also do some try to extract the extra points here for the optimization thing
 
+# Drop categories
+food_df.drop(['categories'], inplace=True)
 # Load the data into the database here!

@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mysql = require('mysql2');
-const flash = require('connect-flash')
+const flash = require('connect-flash');
+const { spawn } = require('child_process');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -52,6 +53,37 @@ const items = [
 
 // http://localhost:3000/home
 router.get('/', function(request, response) {
+    // Get the items list here!
+    // First step: Get the current date and check if there are any results that include this date
+    let today = new Date().toISOString().slice(0, 10)
+    // We need to find a place to clear the older deals!!!
+    const checkquery = 'SELECT * FROM items WHERE valid_from <= ? AND valid_to >= ?'
+    connection.query(checkquery, [today, today], function(err, res){
+        if (err) throw err;
+        // If there isn't, then we call the python file 
+        if (results.length = 0){
+            // Clear the table first
+            const clearquery = 'TRUNCATE TABLE items'
+            connection.query(clearquery, function(err, res){
+                if (err) throw err;
+            })
+            // Run the python script to load table items with newest deals
+            const python = spawn('python', ['../scrape_items.py']);
+            python.on('close', (code) => {
+                console.log('child process close all stdio with code: ${code}');
+            })
+        }
+        // Then we pull items from the database
+        const getquery = 'SELECT * FROM items'
+        connection.query(getquery, function(err, res){
+            if (err) throw err;
+            if (results.length > 0){
+                const items = res;
+            }
+        })
+    })
+
+
 	// If the user is loggedin
 	if (request.session.loggedin) {
         const query = 'SELECT * FROM user WHERE username = ?'
@@ -67,7 +99,7 @@ router.get('/', function(request, response) {
         })
 	} else {
 		// Not logged in
-        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : {}, allergies: "", loggedin: false});
+        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, allergies: "", loggedin: false});
 	}
 });
  
@@ -76,27 +108,11 @@ router.post('/location', (req, res) => {
     const location = req.body;
     
 })
-// Get the loginForm informations
-// router.post('/', (req, res) => {
-//     const { username, password } = req.body;
-//     const query = 'SELECT * FROM user WHERE username = ? AND password = ?'
-//     connection.query(query, [username, password], function (error, results) {
-//         // If there's an issue with query, output error
-//         if (error) throw error;
-//         //If account exists
-//         if (results.length > 0) {
-//             req.session.user = results[0];
-//             // Authenticate the user
-//             req.session.loggedin = true;
-//             req.session.username = username;
-//             // Redirect to home page
-//             res.redirect('/home');
-//         } else {
-//             req.flash('message', 'Incorrect Username and/or Password')
-//             res.redirect('/');
-//         }
-//         res.end();
-//     });
-// })
+
+// Get the parameters and items selected
+// Get the selected items
+
+// Get the parameters
+
 
 module.exports = router;
