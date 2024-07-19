@@ -61,12 +61,13 @@ router.get('/', function(request, response) {
             // If username exists
             if (results.length > 0){
                 // Render the home page with user location
-		        response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, allergies: ""});
+		        response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, 
+                    allergies: results[0].allergies, loggedin: true, username: request.session.username});
             }
         })
 	} else {
 		// Not logged in
-        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : {}, allergies: ""});
+        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : {}, allergies: "", loggedin: false});
 	}
 });
  
