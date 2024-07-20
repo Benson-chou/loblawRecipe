@@ -68,7 +68,7 @@
         <h2>Select items you want or let us pick the optimal combo for you!</h2>
         <section id="table">
             <div class="table">
-                <form id="itemsForm" action="/process-items" method="post">
+                <form id="itemsForm" action="/home/process_items" method="post">
                     <table id="headers">
                         <thead>
                             <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
@@ -80,7 +80,7 @@
                             <% if(items) {%>
                                 <% items.forEach(item=> { %>
                                     <tr>
-                                        <td><input type="checkbox" name="selectItem"></td>
+                                        <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
                                         <td><%= item.itemname %></td>
                                         <td><%= item.bonuspoints %></td>
                                         <td><%= item.condition %></td>
@@ -89,6 +89,7 @@
                             <% } %>
                         </tbody>
                     </table>
+                    <input type="submit" value="Submit" name="items">
                 </form>
             </div>
         </section>
