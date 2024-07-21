@@ -65,7 +65,7 @@
         </form>
     </div> -->
     <div class="items">
-        <h2>Select items you want or let us pick the optimal combo for you!</h2>
+        <h2>Select items you want or select all to let us pick the optimal combo for you!</h2>
         <section id="table">
             <div class="table">
                 <form id="itemsForm" action="/home/process_items" method="post">
@@ -73,8 +73,8 @@
                         <thead>
                             <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
                             <th id="itemname">Item Name</th>
-                            <th id="bonuspoints">Bonus Value</th>
-                            <th id="condition">Condition</th>
+                            <th id="bonuspoints">Discounted Price (CAD)</th>
+                            <th id="condition">Extra Conditions</th>
                         </thead>
                         <tbody>
                             <% if(items) {%>
@@ -82,21 +82,14 @@
                                     <tr>
                                         <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
                                         <td><%= item.itemname %></td>
-                                        <td><%= item.bonuspoints %></td>
+                                        <td><%= item.price %></td>
                                         <td><%= item.condition %></td>
                                     </tr>
                                 <% }); %>
                             <% } %>
                         </tbody>
                     </table>
-                    <input type="submit" value="Submit" name="items">
-                </form>
-            </div>
-        </section>
-        <section id="parameters">
-            <div class="table">
-                <form id="parameters" action="/parameters" method="post">
-                    <!-- test -->
+                    <section id="parameters">
                     <label for="Creativity">Creativity: </label>
                     <div class="creativity-container">
                         <input type="range" min="0" max="10" step="1" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
@@ -110,8 +103,15 @@
                     <% } else{ %>
                         <input type="text" name="allergies" placeholder="Allergies">
                     <% } %>
+                    </section>
+                    <% if(message.length > 0) {%>
+                        <div class="alert-fail">
+                            <%= message %>
+                        </div>
+                    <% } %>
+                    <input type="submit" value="Submit" name="items">
                 </form>
-            </div>    
+            </div>
         </section>
     </div>
 </body>

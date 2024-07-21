@@ -94,7 +94,8 @@ router.get('/', function(request, response) {
             if (results.length > 0){
                 // Render the home page with user location
 		        response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, 
-                    allergies: results[0].allergies, loggedin: true, username: request.session.username});
+                    allergies: results[0].allergies, loggedin: true, username: request.session.username, 
+                message : request.flash('message')});
             }
         })
 	} else {
@@ -112,7 +113,16 @@ router.get('/', function(request, response) {
 // Get the selected items
 var checkednames = null;
 router.post('/process_items', (req, res) => {
+    if (req.body.itemCheckbox === undefined){
+        req.flash('message', 'Please select at least one item')
+        res.redirect('/home')
+        // flash a message saying please pick at least one item
+    }
+
     console.log(req.body.itemCheckbox)
+    console.log(req.body.creativity)
+    console.log(req.body.budget)
+    console.log(req.body.allergies)
 })
 
 // Get the parameters
