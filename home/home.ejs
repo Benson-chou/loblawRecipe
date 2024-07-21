@@ -31,6 +31,18 @@
                 })
             }
         }
+        function savebutton() {
+            var save_button = document.querySelector('.save_button');
+            console.log(save_button.children)
+            console.log(save_button.childNodes[0].nextSibling.className)
+            var icon_class = save_button.childNodes[0].nextSibling.className
+            // This works but not sure y regular and solid looks the same :(
+            if (icon_class === "fa fa-regular fa-bookmark") {
+                save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-bookmark"
+            } else {
+                save_button.childNodes[0].nextSibling.className = "fa fa-regular fa-bookmark"
+            }
+        }
     </script>
 </head>
 
@@ -75,6 +87,7 @@
                     <table id="headers">
                         <thead>
                             <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
+                            <th id="item_image"></th>
                             <th id="itemname">Item Name</th>
                             <th id="bonuspoints">Discounted Price (CAD)</th>
                             <th id="condition">Extra Conditions</th>
@@ -84,6 +97,7 @@
                                 <% items.forEach(item=> { %>
                                     <tr>
                                         <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
+                                        <td><img src="<%= item.image_url%>"></td>
                                         <td><%= item.itemname %></td>
                                         <td><%= item.price %></td>
                                         <td><%= item.condition %></td>
@@ -107,14 +121,45 @@
                         <input type="text" name="allergies" placeholder="Allergies">
                     <% } %>
                     </section>
-                    <% if(message.length > 0) {%>
+                    <% if(item_message.length > 0) {%>
                         <div class="alert-fail">
-                            <%= message %>
+                            <%= item_message %>
                         </div>
                     <% } %>
-                    <input type="submit" value="Submit" name="items">
+                    <input type="submit" value="Generate Recipes" name="items">
                 </form>
             </div>
         </section>
     </div>
+    <!-- Where the response will be displayed -->
+    <section id="recipes">
+        <div class="table">
+            <table id="headers">
+                <thead>
+                    <th id="recipename">Recipe Name</th>
+                    <th id="Description">Description</th>
+                    <th id="url">Recipe Url</th>
+                    <th id="save">Save</th>
+                </thead>
+                <tbody>
+                    <!-- Need to remove this part for the page to load fine now -->
+                    <% if(recipes.length > 0) {%>
+                        <% recipes.forEach(recipe=> { %>
+                            <tr>
+                                <td><%= recipe.recipename %></td>
+                                <td><%= recipe.description %></td>
+                                <td><%= recipe.url %></td>
+                                <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
+                                    <i class="fa fa-regular fa-bookmark"></i>
+                                </button></td>
+                                <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
+                                 <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->
+                            </tr>
+                        <% }); %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    
 </body>

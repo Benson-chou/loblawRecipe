@@ -4,7 +4,7 @@ const path = require('path');
 const store = new session.MemoryStore();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 const loginRoute = require('./login/login');
 const signupRoute = require('./signup/signup');

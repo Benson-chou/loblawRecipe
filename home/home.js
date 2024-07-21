@@ -1,9 +1,15 @@
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require('express');
 const path = require('path');
 const router = express.Router();
 const mysql = require('mysql2');
 const flash = require('connect-flash');
 const { spawn } = require('child_process');
+
+const googleAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -95,12 +101,13 @@ router.get('/', function(request, response) {
                 // Render the home page with user location
 		        response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, 
                     allergies: results[0].allergies, loggedin: true, username: request.session.username, 
-                message : request.flash('message')});
+                    item_message : request.flash('item_message'), recipes : {}});
             }
         })
 	} else {
 		// Not logged in
-        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, allergies: "", loggedin: false});
+        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+            allergies: "", loggedin: false, item_message : '', recipes : {}});
 	}
 });
  
@@ -114,17 +121,38 @@ router.get('/', function(request, response) {
 var checkednames = null;
 router.post('/process_items', (req, res) => {
     if (req.body.itemCheckbox === undefined){
-        req.flash('message', 'Please select at least one item')
-        res.redirect('/')
+        req.flash('item_message', 'Please select at least one item')
+        res.redirect('/home')
         // flash a message saying please pick at least one item
+        return;
     }
+    const geminiConfig = {
+    temperature: req.body.creativity / 10,
+    topP: 1,
+    topK: 1,
+    maxOutputTokens: 4096,
+    };
 
-    console.log(req.body.itemCheckbox)
-    console.log(req.body.creativity)
-    console.log(req.body.budget)
-    console.log(req.body.allergies)
+    const geminiModel = googleAI.getGenerativeModel({
+        model: "gemini-pro", 
+        geminiConfig
+    });
+
+    const generate = async () => {
+        try {
+            const prompt = `Can you recommend me some online recipes with their URL using\
+        ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
+        avoid these allergies: ${req.body.allergies}. Answer `;
+            const result = await geminiModel.generateContent(prompt);
+            const response = result.response;
+            console.log(response.text());
+            // Load the response into database first and then create tables? 
+        }catch (error){
+            console.log("response error", error);
+        }
+    }
+    generate()
 })
 
-// Get the parameters
 
 module.exports = router;
