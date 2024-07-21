@@ -115,7 +115,7 @@ var checkednames = null;
 router.post('/process_items', (req, res) => {
     if (req.body.itemCheckbox === undefined){
         req.flash('message', 'Please select at least one item')
-        res.redirect('/home')
+        res.redirect('/')
         // flash a message saying please pick at least one item
     }
 
