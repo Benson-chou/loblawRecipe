@@ -16,18 +16,10 @@ const clientOpts = connector.getOptions({
 const pool = mysql.createPool({
     ...clientOpts,
     host: process.env.CLOUD_HOST,
-    user: 'root',
+    user: process.env.CLOUD_USER,
     password: process.env.CLOUD_PASSWORD,
     database: process.env.CLOUD_DB_NAME,
 });
-
-const connection = pool.getConnection();
-const [result] = connection.query(`SELECT NOW();`);
-
-console.table(result);
-
-pool.end();
-connector.close();
 
 router.use(flash())
 
@@ -38,26 +30,29 @@ router.get('/', function(request, response) {
 });
 
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { username, password, postalCode, allergies } = req.body;
-    connection.query('SELECT * FROM user WHERE username = ?', [username], function (error, results) {
-        console.log("checked username")
-        if (error) throw error;
-        // If this account already exists
+    
+    try {
+        const connection = await pool.getConnection();
+        const [results] = await connection.query('SELECT * FROM user WHERE username = ?', [username]);
+
         if (results.length > 0) {
             // Need to output the following message
             req.flash('message', 'This username is taken. Please insert another username')
             res.redirect('/signup')
         } else {
             connection.query('INSERT INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)',
-                [username, password, postalCode, allergies], function (error) {
-                    if (error) throw error;
-                    console.log(`User ${username} has been created.`)
-                    res.redirect('/home');
-                }
-            )
-        }
-    });
-});
+            [username, password, postalCode, allergies]);
+            res.redirect('/home');
+        } connection.release();
+    }
+    catch (error) {
+        console.error('Error registering user:', error);
+        req.flash('message', 'Failed to register user. Please try again.');
+        res.redirect('/signup'); // Redirect with error message
+    }
+} 
+);
 
 module.exports = router;
