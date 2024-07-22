@@ -1,3 +1,4 @@
+const {Connector} = require('@google-cloud/cloud-sql-connector');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const dotenv = require("dotenv");
 dotenv.config();
@@ -11,14 +12,19 @@ const { spawn } = require('child_process');
 
 const googleAI = new GoogleGenerativeAI(process.env.API_KEY);
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'loblaw-recipe'
-});
+const connector = new Connector();
+const clientOpts = connector.getOptions({
+    instanceConnectionName: process.env.CLOUD_CONNECTION_NAME,
+    ipType: 'PUBLIC',
+  });
 
-connection.connect();
+const pool = mysql.createPool({
+    ...clientOpts,
+    host: process.env.CLOUD_HOST,
+    user: process.env.CLOUD_USER,
+    password: process.env.CLOUD_PASSWORD,
+    database: process.env.CLOUD_DB_NAME,
+});
 
 router.use(flash())
 
@@ -58,7 +64,7 @@ const items = [
 
 
 // http://localhost:3000/home
-router.get('/', function(request, response) {
+router.get('/', async function(request, response) {
     // Get the items list here!
     // First step: Get the current date and check if there are any results that include this date
     // let today = new Date().toISOString().slice(0, 10)
@@ -92,18 +98,16 @@ router.get('/', function(request, response) {
 
 	// If the user is loggedin
 	if (request.session.loggedin) {
-        const query = 'SELECT * FROM user WHERE username = ?'
-        connection.query(query, [request.session.username], function(error, results){
-            // Output error if error
-            if (error) throw error;
-            // If username exists
-            if (results.length > 0){
-                // Render the home page with user location
-		        response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, 
-                    allergies: results[0].allergies, loggedin: true, username: request.session.username, 
-                    item_message : request.flash('item_message'), recipes : {}});
-            }
-        })
+        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+            allergies: "", loggedin: true, username: request.session.username, item_message : '', recipes : {}});
+        
+        // const connection = await pool.getConnection();
+        // const [results] = await connection.query('SELECT * FROM user WHERE username = ?', [request.session.username]);
+        // if (results.length > 0) {
+        //     response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, 
+        //         allergies: results[0].allergies, loggedin: true, username: request.session.username, 
+        //         item_message : request.flash('item_message'), recipes : {}});
+        // }
 	} else {
 		// Not logged in
         response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 

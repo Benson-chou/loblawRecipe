@@ -40,9 +40,9 @@ router.post('/', async (req, res) => {
     if (results.length > 0) {
         req.session.user = results[0];
         req.session.username = username;
-        res.redirect('/home');
-        // Needs to be set after redirect, or else redirection does not happen
+        // Needs to be set before redirect to save session info
         req.session.loggedin = true;
+        res.redirect('/home');
     } else {
         req.flash('message', 'Incorrect Username and/or Password')
         res.redirect('/');
