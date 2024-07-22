@@ -44,6 +44,8 @@ router.post('/', async (req, res) => {
         } else {
             connection.query('INSERT INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)',
             [username, password, postalCode, allergies]);
+            req.session.username = username;
+            req.session.loggedin = true;
             res.redirect('/home');
         } connection.release();
     }
