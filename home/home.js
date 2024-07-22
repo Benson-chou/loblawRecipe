@@ -156,7 +156,7 @@ router.post('/process_items', (req, res) => {
             const insertRecipe = (recipe) => {
                 const insertquery = "INSERT INTO recipes (recipe_name, description, url)\
                     VALUES (?, ?, ?)"
-                connection.query(insertquery, [recipe['Recipe name'], recipe['Description'], recipe['URL']], (err, res){
+                connection.query(insertquery, [recipe['Recipe name'], recipe['Description'], recipe['URL']], (err, res) => {
                     if (err) throw err;
                     console.log(`Inserted recipe: ${recipe['Recipe name']}`);
                 });

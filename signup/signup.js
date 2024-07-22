@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
     catch (error) {
         console.error('Error registering user:', error);
         req.flash('message', 'Failed to register user. Please try again.');
-        res.redirect('/signup'); // Redirect with error message
+        res.redirect('/signup'); 
     }
 } 
 );
