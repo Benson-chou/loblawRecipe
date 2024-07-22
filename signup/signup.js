@@ -1,17 +1,33 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const flash = require('connect-flash')
+const {Connector} = require('@google-cloud/cloud-sql-connector');
+const dotenv = require('dotenv');
+dotenv.config();
 
-const connection = mysql.createConnection({
-    host: 'localhost',
+const connector = new Connector();
+const clientOpts = connector.getOptions({
+    instanceConnectionName: process.env.CLOUD_CONNECTION_NAME,
+    ipType: 'PUBLIC',
+  });
+
+const pool = mysql.createPool({
+    ...clientOpts,
+    host: process.env.CLOUD_HOST,
     user: 'root',
-    password: '',
-    database: 'loblaw-recipe'
+    password: process.env.CLOUD_PASSWORD,
+    database: process.env.CLOUD_DB_NAME,
 });
 
-connection.connect();
+const connection = pool.getConnection();
+const [result] = connection.query(`SELECT NOW();`);
+
+console.table(result);
+
+pool.end();
+connector.close();
 
 router.use(flash())
 
