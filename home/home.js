@@ -116,9 +116,6 @@ router.get('/', function(request, response) {
 //     const location = req.body;
 // })
 
-// Get the parameters and items selected
-// Get the selected items
-var checkednames = null;
 router.post('/process_items', (req, res) => {
     if (req.body.itemCheckbox === undefined){
         req.flash('item_message', 'Please select at least one item')
@@ -142,9 +139,33 @@ router.post('/process_items', (req, res) => {
         try {
             const prompt = `Can you recommend me some online recipes with their URL using\
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
-        avoid these allergies: ${req.body.allergies}. Answer `;
+        avoid these allergies: ${req.body.allergies}. \
+        Please output only the json form of Recipe name, Description, and URL.`;
             const result = await geminiModel.generateContent(prompt);
-            const response = result.response;
+            const responses = result.response.text();
+            const recipes = JSON.parse(responses)
+
+            // Make sure recipes is not empty
+            if (recipes.length === 0){
+                req.flash('item_message', 'No recipes were generated. Please try again!')
+                res.redirect('/home')
+                return;
+            } 
+            
+            // Insert recipe into the table
+            const insertRecipe = (recipe) => {
+                const insertquery = "INSERT INTO recipes (recipe_name, description, url)\
+                    VALUES (?, ?, ?)"
+                connection.query(insertquery, [recipe['Recipe name'], recipe['Description'], recipe['URL']], (err, res){
+                    if (err) throw err;
+                    console.log(`Inserted recipe: ${recipe['Recipe name']}`);
+                });
+            };
+            recipes.array.forEach(recipe => {
+                insertRecipe(recipe);
+            });
+            
+
             console.log(response.text());
             // Load the response into database first and then create tables? 
         }catch (error){
