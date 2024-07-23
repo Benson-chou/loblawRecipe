@@ -6,7 +6,7 @@ dotenv.config();
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const flash = require('connect-flash');
 const { spawn } = require('child_process');
 
@@ -70,23 +70,29 @@ router.get('/', async (request, response) => {
     // We need to find a place to clear the older deals!!!
     const checkquery = 'SELECT * FROM items WHERE valid_from <= ? AND valid_to >= ?';
     try{
+        // Issue from last commit was that connection is undefined, so running connection.query gives an error
+        // Root cause being forgot to add promise to require SQL line, so we are not awaiting for the connection to establish
         const connection = await pool.getConnection();
         const [results] = await connection.query(checkquery, [today, today]);
-        if (results.length = 0){
+
+        if (results.length == 0) {
             // Clear the table first
             const clearquery = 'TRUNCATE TABLE items'
-            const clear_table = connection.query(clearquery);
+            connection.query(clearquery);
+            console.log("truncated table")
             // Run the python script to load table items with newest deals
+            // !!! Bug in this spawn line
             const python = spawn('python', ['../scrape_items.py']);
-            python.on('close', (code) => {
-                console.log('child process close all stdio with code: ${code}');
-            })
+            // python.on('close', (code) => {
+            //     console.log('child process close all stdio with code: ${code}');
+            // })
         }
-        const getquery = 'SELECT * FROM items'
-        const [db_items] = await connection.query(getquery);
-            if (db_items.length > 0){
-                var items = res;
-            }
+        // const getquery = 'SELECT * FROM items'
+        // const [db_items] = await connection.query(getquery);
+        //     if (db_items.length > 0){
+        //         var items = response;
+        //     }
+
         if (request.session.loggedin) {
             let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== undefined ? request.session.allergies : null);
             response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
