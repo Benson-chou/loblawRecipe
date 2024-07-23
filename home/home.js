@@ -98,16 +98,10 @@ router.get('/', async function(request, response) {
 
 	// If the user is loggedin
 	if (request.session.loggedin) {
+        let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== undefined ? request.session.allergies : null);
         response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
-            allergies: "", loggedin: true, username: request.session.username, item_message : '', recipes : {}});
-        
-        // const connection = await pool.getConnection();
-        // const [results] = await connection.query('SELECT * FROM user WHERE username = ?', [request.session.username]);
-        // if (results.length > 0) {
-        //     response.render(path.join(__dirname + '/home.ejs'), { location : results[0].preferred_location, items : items, 
-        //         allergies: results[0].allergies, loggedin: true, username: request.session.username, 
-        //         item_message : request.flash('item_message'), recipes : {}});
-        // }
+            allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
+
 	} else {
 		// Not logged in
         response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 

@@ -36,7 +36,6 @@ router.post('/', async (req, res) => {
     try {
         const connection = await pool.getConnection();
     const [results] = await connection.query('SELECT * FROM user WHERE username = ? AND password = ?', [username, password]);
-
     if (results.length > 0) {
         req.session.user = results[0];
         req.session.username = username;

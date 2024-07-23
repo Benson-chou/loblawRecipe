@@ -32,7 +32,6 @@ router.get('/', function(request, response) {
 
 router.post('/', async (req, res) => {
     const { username, password, postalCode, allergies } = req.body;
-    
     try {
         const connection = await pool.getConnection();
         const [results] = await connection.query('SELECT * FROM user WHERE username = ?', [username]);
@@ -46,6 +45,7 @@ router.post('/', async (req, res) => {
             [username, password, postalCode, allergies]);
             req.session.username = username;
             req.session.loggedin = true;
+            req.session.allergies = allergies;
             res.redirect('/home');
         } connection.release();
     }
