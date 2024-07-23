@@ -40,13 +40,15 @@
             if (icon_class === "fa fa-regular fa-bookmark") {
                 save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-flag"
                 // Save the recipe here
-                
+                saverecipe()
             } else {
                 save_button.childNodes[0].nextSibling.className = "fa fa-regular fa-bookmark"
                 // Delete the recipe here 
+                deleterecipe()
             }
         }
     </script>
+    <script type="text/javascript" src="/home.js"></script>
 </head>
 
 <body>
@@ -100,10 +102,10 @@
                                 <% items.forEach(item=> { %>
                                     <tr>
                                         <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
-                                        <td><img src="<%= item.image_url%>"></td>
-                                        <td><%= item.itemname %></td>
+                                        <td><img src="<%= item.image%>"></td>
+                                        <td><%= item.item_name %></td>
                                         <td><%= item.price %></td>
-                                        <td><%= item.condition %></td>
+                                        <td><%= item.sale_story%></td>
                                     </tr>
                                 <% }); %>
                             <% } %>

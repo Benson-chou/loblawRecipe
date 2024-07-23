@@ -83,15 +83,15 @@ router.get('/', async (request, response) => {
             // Run the python script to load table items with newest deals
             // !!! Bug in this spawn line
             const python = spawn('python', ['../scrape_items.py']);
-            // python.on('close', (code) => {
-            //     console.log('child process close all stdio with code: ${code}');
-            // })
+            python.on('close', (code) => {
+                console.log(`child process close all stdio with code: ${code}`);
+            })
         }
-        // const getquery = 'SELECT * FROM items'
-        // const [db_items] = await connection.query(getquery);
-        //     if (db_items.length > 0){
-        //         var items = response;
-        //     }
+        const getquery = 'SELECT * FROM items'
+        const [db_items] = await connection.query(getquery);
+            if (db_items.length > 0){
+                var items = db_items;
+            }
 
         if (request.session.loggedin) {
             let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== undefined ? request.session.allergies : null);
@@ -178,7 +178,7 @@ router.post('/process_items', (req, res) => {
 })
 
 function saverecipe() {
-    
+
 }
 
 function deleterecipe() {
