@@ -29,7 +29,7 @@ const pool = mysql.createPool({
 router.use(flash())
 
 // This is just for testing
-const items = [
+var items = [
     {
         id: 1,
         itemname: 'Sword of Truth',
@@ -62,52 +62,49 @@ const items = [
     }
 ];
 
-
 // http://localhost:3000/home
-router.get('/', async function(request, response) {
+router.get('/', async (request, response) => {
     // Get the items list here!
     // First step: Get the current date and check if there are any results that include this date
-    // let today = new Date().toISOString().slice(0, 10)
-    // // We need to find a place to clear the older deals!!!
-    // const checkquery = 'SELECT * FROM items WHERE valid_from <= ? AND valid_to >= ?'
-    // connection.query(checkquery, [today, today], function(err, res){
-    //     if (err) throw err;
-    //     // If there isn't, then we call the python file 
-    //     if (results.length = 0){
-    //         // Clear the table first
-    //         const clearquery = 'TRUNCATE TABLE items'
-    //         connection.query(clearquery, function(err, res){
-    //             if (err) throw err;
-    //         })
-    //         // Run the python script to load table items with newest deals
-    //         const python = spawn('python', ['../scrape_items.py']);
-    //         python.on('close', (code) => {
-    //             console.log('child process close all stdio with code: ${code}');
-    //         })
-    //     }
-    //     // Then we pull items from the database
-    //     const getquery = 'SELECT * FROM items'
-    //     connection.query(getquery, function(err, res){
-    //         if (err) throw err;
-    //         if (results.length > 0){
-    //             const items = res;
-    //         }
-    //     })
-    // })
+    let today = new Date().toISOString().slice(0, 10)
+    // We need to find a place to clear the older deals!!!
+    const checkquery = 'SELECT * FROM items WHERE valid_from <= ? AND valid_to >= ?';
+    try{
+        const connection = await pool.getConnection();
+        const [results] = await connection.query(checkquery, [today, today]);
+        if (results.length = 0){
+            // Clear the table first
+            const clearquery = 'TRUNCATE TABLE items'
+            const clear_table = connection.query(clearquery);
+            // Run the python script to load table items with newest deals
+            const python = spawn('python', ['../scrape_items.py']);
+            python.on('close', (code) => {
+                console.log('child process close all stdio with code: ${code}');
+            })
+        }
+        const getquery = 'SELECT * FROM items'
+        const [db_items] = await connection.query(getquery);
+            if (db_items.length > 0){
+                var items = res;
+            }
+        if (request.session.loggedin) {
+            let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== undefined ? request.session.allergies : null);
+            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+                allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
+    
+        } else {
+            // Not logged in
+            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+                allergies: "", loggedin: false, item_message : '', recipes : {}});
+        }
+    } 
+        catch (error) {
+            console.error('Error loading home page (loading items): ', error);
+            // Not sure what to do here
+        }
+        
+    })
 
-
-	// If the user is loggedin
-	if (request.session.loggedin) {
-        let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== undefined ? request.session.allergies : null);
-        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
-            allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
-
-	} else {
-		// Not logged in
-        response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
-            allergies: "", loggedin: false, item_message : '', recipes : {}});
-	}
-});
  
 // Get the location informations
 // router.post('/location', (req, res) => {
@@ -138,7 +135,7 @@ router.post('/process_items', (req, res) => {
             const prompt = `Can you recommend me some online recipes with their URL using\
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
         avoid these allergies: ${req.body.allergies}. \
-        Please output only the json form of Recipe name, Description, and URL.`;
+        Please output only the json form of Recipe_name, Description, and URL.`;
             const result = await geminiModel.generateContent(prompt);
             const responses = result.response.text();
             const recipes = JSON.parse(responses)
@@ -149,22 +146,23 @@ router.post('/process_items', (req, res) => {
                 res.redirect('/home')
                 return;
             } 
+            res.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+                allergies: userAllergies, loggedin: true, username: request.session.username, 
+                item_message : '', recipes : recipes});
+    
             
             // Insert recipe into the table
-            const insertRecipe = (recipe) => {
-                const insertquery = "INSERT INTO recipes (recipe_name, description, url)\
-                    VALUES (?, ?, ?)"
-                connection.query(insertquery, [recipe['Recipe name'], recipe['Description'], recipe['URL']], (err, res) => {
-                    if (err) throw err;
-                    console.log(`Inserted recipe: ${recipe['Recipe name']}`);
-                });
-            };
-            recipes.array.forEach(recipe => {
-                insertRecipe(recipe);
-            });
-            
-
-            console.log(response.text());
+            // const insertRecipe = (recipe) => {
+            //     const insertquery = "INSERT INTO recipes (recipe_name, description, url)\
+            //         VALUES (?, ?, ?)"
+            //     connection.query(insertquery, [recipe['Recipe_name'], recipe['Description'], recipe['URL']], (err, res) => {
+            //         if (err) throw err;
+            //         console.log(`Inserted recipe: ${recipe['Recipe name']}`);
+            //     });
+            // };
+            // recipes.array.forEach(recipe => {
+            //     insertRecipe(recipe);
+            // });
             // Load the response into database first and then create tables? 
         }catch (error){
             console.log("response error", error);
@@ -172,6 +170,10 @@ router.post('/process_items', (req, res) => {
     }
     generate()
 })
+
+function saverecipe() {
+    
+}
 
 
 module.exports = router;

@@ -38,9 +38,12 @@
             var icon_class = save_button.childNodes[0].nextSibling.className
             // This works but not sure y regular and solid looks the same :(
             if (icon_class === "fa fa-regular fa-bookmark") {
-                save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-bookmark"
+                save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-flag"
+                // Save the recipe here
+                
             } else {
                 save_button.childNodes[0].nextSibling.className = "fa fa-regular fa-bookmark"
+                // Delete the recipe here 
             }
         }
     </script>
