@@ -90,17 +90,17 @@ router.get('/', async (request, response) => {
         const getquery = 'SELECT * FROM items'
         const [db_items] = await connection.query(getquery);
             if (db_items.length > 0){
-                var items = db_items;
+                request.session.items = db_items;
             }
 
         if (request.session.loggedin) {
             let userAllergies = request.session.allergies !== undefined ? request.session.allergies : 'None';
-            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : request.session.items, 
                 allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
     
         } else {
             // Not logged in
-            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : request.session.items, 
                 allergies: "None", loggedin: false, item_message : request.flash('item_message'), recipes : {}});
         }
     } 
@@ -126,13 +126,11 @@ router.post('/', (req, res) => {
     }
     const geminiConfig = {
     temperature: req.body.creativity / 10,
-    topP: 1,
-    topK: 1,
     maxOutputTokens: 4096,
     };
 
     const geminiModel = googleAI.getGenerativeModel({
-        model: "gemini-pro", 
+        model: "gemini-1.5-pro", 
         geminiConfig
     });
 
@@ -147,7 +145,8 @@ router.post('/', (req, res) => {
   "Description": "This easy one pot cheeseburger pasta recipe is perfect for busy weeknights. It's made with ground beef, pasta, cheese, and a creamy tomato sauce.",
   "URL": "https://www.momontimeout.com/easy-one-pot-cheeseburger-pasta/"
 }]. \
-        (Please use the exact header as defined, do not include any other text, and don't start a new recipe if there are not enough tokens)`;
+        (Please use the exact header as defined, 
+        do not include any other text, and don't start a new recipe if there are not enough tokens)`;
             const result = await geminiModel.generateContent(prompt);
             var responses = result.response.text();
             responses = responses.replace("```json", "");
@@ -163,7 +162,7 @@ router.post('/', (req, res) => {
             } 
             let userAllergies = req.session.allergies ? req.session.allergies : 'None';
 
-            res.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
+            res.render(path.join(__dirname + '/home.ejs'), {location: '', items : req.session.items, 
                 allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
                 item_message : req.flash('item_message'), recipes : recipes});
     
