@@ -85,87 +85,89 @@
             <input type="submit" name="location" value="Search">
         </form>
     </div> -->
-    <div class="items">
-        <h2>Select items you want or select all to let us pick the optimal combo for you!</h2>
-        <section id="table">
-            <div class="table">
-                <form id="itemsForm" action="/home" method="post">
-                    <table id="headers">
-                        <thead>
-                            <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
-                            <th id="item_image"></th>
-                            <th id="itemname">Item Name</th>
-                            <th id="bonuspoints">Discounted Price (CAD)</th>
-                            <th id="condition">Extra Conditions</th>
-                        </thead>
-                        <tbody>
-                            <% if(items) {%>
-                                <% items.forEach(item=> { %>
-                                    <tr>
-                                        <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
-                                        <td><img src="<%= item.image%>" class="item-image"></td>
-                                        <td><%= item.item_name %></td>
-                                        <td><%= item.price %></td>
-                                        <td><%= item.sale_story%></td>
-                                    </tr>
-                                <% }); %>
-                            <% } %>
-                        </tbody>
-                    </table>
-                    <section id="parameters">
-                    <label for="Creativity">Creativity: </label>
-                    <div class="creativity-container">
-                        <input type="range" min="0" max="10" step="1" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
-                        <output>0</output>
-                    </div>
-                    <label for="Budget">Budget (CAD): </label>
-                    <input type="text" min="0" name = budget id="budget">
-                    <label for="additional"> Allergies:</label>
-                    <% if(allergies) {%>
-                        <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
-                    <% } else{ %>
-                        <input type="text" name="allergies" placeholder="Allergies" value = 'None'>
-                    <% } %>
-                    </section>
-                    <% if(item_message.length > 0) {%>
-                        <div class="alert-fail">
-                            <%= item_message %>
+    <div class="content-container">
+        <div class="items">
+            <h2>Select items you want or select all to let us pick the optimal combo for you!</h2>
+            <section id="table">
+                <div class="table">
+                    <form id="itemsForm" action="/home" method="post">
+                        <table id="headers">
+                            <thead>
+                                <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
+                                <th id="item_image"></th>
+                                <th id="itemname">Item Name</th>
+                                <th id="bonuspoints">Discounted Price (CAD)</th>
+                                <th id="condition">Extra Conditions</th>
+                            </thead>
+                            <tbody>
+                                <% if(items) {%>
+                                    <% items.forEach(item=> { %>
+                                        <tr>
+                                            <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
+                                            <td><img src="<%= item.image%>" class="item-image"></td>
+                                            <td><%= item.item_name %></td>
+                                            <td><%= item.price %></td>
+                                            <td><%= item.sale_story%></td>
+                                        </tr>
+                                    <% }); %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <section id="parameters">
+                        <label for="Creativity">Creativity: </label>
+                        <div class="creativity-container">
+                            <input type="range" min="0" max="10" step="1" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
+                            <output>0</output>
                         </div>
-                    <% } %>
-                    <input type="submit" value="Generate Recipes" name="items">
-                </form>
+                        <label for="Budget">Budget (CAD): </label>
+                        <input type="text" min="0" name = budget id="budget">
+                        <label for="additional"> Allergies:</label>
+                        <% if(allergies) {%>
+                            <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
+                        <% } else{ %>
+                            <input type="text" name="allergies" placeholder="Allergies" value = 'None'>
+                        <% } %>
+                        </section>
+                        <% if(item_message.length > 0) {%>
+                            <div class="alert-fail">
+                                <%= item_message %>
+                            </div>
+                        <% } %>
+                        <input type="submit" value="Generate Recipes" name="items">
+                    </form>
+                </div>
+            </section>
+        </div>
+        <!-- Where the response will be displayed -->
+        <section id="recipes">
+            <div class="table">
+                <table id="headers">
+                    <thead>
+                        <th id="recipename">Recipe Name</th>
+                        <th id="Description">Description</th>
+                        <th id="url">Recipe Url</th>
+                        <th id="save">Save</th>
+                    </thead>
+                    <tbody>
+                        <!-- Need to remove this part for the page to load fine now -->
+                        <% if(recipes.length > 0) {%>
+                            <% recipes.forEach(recipe=> { %>
+                                <tr>
+                                    <td><%= recipe.Recipe_name %></td>
+                                    <td><%= recipe.Description %></td>
+                                    <td><a href="<%= recipe.URL %>">Link to Recipe</a></td>
+                                    <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
+                                        <i class="fa fa-regular fa-bookmark"></i>
+                                    </button></td>
+                                    <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
+                                     <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->
+                                </tr>
+                            <% }); %>
+                        <% } %>
+                    </tbody>
+                </table>
             </div>
         </section>
     </div>
-    <!-- Where the response will be displayed -->
-    <section id="recipes">
-        <div class="table">
-            <table id="headers">
-                <thead>
-                    <th id="recipename">Recipe Name</th>
-                    <th id="Description">Description</th>
-                    <th id="url">Recipe Url</th>
-                    <th id="save">Save</th>
-                </thead>
-                <tbody>
-                    <!-- Need to remove this part for the page to load fine now -->
-                    <% if(recipes.length > 0) {%>
-                        <% recipes.forEach(recipe=> { %>
-                            <tr>
-                                <td><%= recipe.Recipe_name %></td>
-                                <td><%= recipe.Description %></td>
-                                <td><a href="<%= recipe.URL %>">Link to Recipe</a></td>
-                                <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
-                                    <i class="fa fa-regular fa-bookmark"></i>
-                                </button></td>
-                                <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
-                                 <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->
-                            </tr>
-                        <% }); %>
-                    <% } %>
-                </tbody>
-            </table>
-        </div>
-    </section>
     
 </body>

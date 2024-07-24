@@ -12,13 +12,13 @@
 }
 
 body {
-    background-color: #435165;
+    background-color: #7897c3;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
-    background-color: var(--theme-color);
+    background-color: transparent;
     padding: 2vh;
 }
 
@@ -27,6 +27,7 @@ body {
     align-items: center;
     color: var(--font-color);
     font-weight: bold;
+    font-size: large;
 }
 
 .header .links {
@@ -73,11 +74,11 @@ body {
 }
 
 .items #headers tbody tr:nth-child(odd) {
-    background-color: #b7dfc3;
+    background-color: #ebf1ed;
 }
 
 .items #headers tr:nth-child(even) {
-    background-color: #dcdfb7;
+    background-color: #dbdbdb;
 }
 
 #parameters {
