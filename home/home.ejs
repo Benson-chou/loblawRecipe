@@ -88,7 +88,7 @@
         <h2>Select items you want or select all to let us pick the optimal combo for you!</h2>
         <section id="table">
             <div class="table">
-                <form id="itemsForm" action="/home/process_items" method="post">
+                <form id="itemsForm" action="/home" method="post">
                     <table id="headers">
                         <thead>
                             <th id="checkbox"><button type="button" class="select-all" onclick="selectAll()">Select all</button></th>
@@ -123,7 +123,7 @@
                     <% if(allergies) {%>
                         <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
                     <% } else{ %>
-                        <input type="text" name="allergies" placeholder="Allergies">
+                        <input type="text" name="allergies" placeholder="Allergies" value = 'None'>
                     <% } %>
                     </section>
                     <% if(item_message.length > 0) {%>
@@ -151,7 +151,7 @@
                     <% if(recipes.length > 0) {%>
                         <% recipes.forEach(recipe=> { %>
                             <tr>
-                                <td><%= recipe.recipename %></td>
+                                <td><%= recipe.recipe_name %></td>
                                 <td><%= recipe.description %></td>
                                 <td><%= recipe.url %></td>
                                 <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">

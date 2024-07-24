@@ -10,7 +10,7 @@ const mysql = require('mysql2/promise');
 const flash = require('connect-flash');
 const { spawn } = require('child_process');
 
-const googleAI = new GoogleGenerativeAI(process.env.API_KEY);
+const googleAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const connector = new Connector();
 const clientOpts = connector.getOptions({
@@ -94,14 +94,14 @@ router.get('/', async (request, response) => {
             }
 
         if (request.session.loggedin) {
-            let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== undefined ? request.session.allergies : null);
+            let userAllergies = request.session.allergies !== undefined ? request.session.allergies : 'None';
             response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
                 allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
     
         } else {
             // Not logged in
             response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
-                allergies: "", loggedin: false, item_message : '', recipes : {}});
+                allergies: "None", loggedin: false, item_message : '', recipes : {}});
         }
     } 
         catch (error) {
@@ -117,7 +117,7 @@ router.get('/', async (request, response) => {
 //     const location = req.body;
 // })
 
-router.post('/process_items', (req, res) => {
+router.post('/', (req, res) => {
     if (req.body.itemCheckbox === undefined){
         req.flash('item_message', 'Please select at least one item')
         res.redirect('/home')
@@ -141,10 +141,14 @@ router.post('/process_items', (req, res) => {
             const prompt = `Can you recommend me some online recipes with their URL using\
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
         avoid these allergies: ${req.body.allergies}. \
-        Please output only the json form of Recipe_name, Description, and URL.`;
+        Please output only the json form of Recipe_name, Description, and URL. \
+        (Please use the exact header as defined and do not include any other text)`;
             const result = await geminiModel.generateContent(prompt);
-            const responses = result.response.text();
-            const recipes = JSON.parse(responses)
+            var responses = result.response.text();
+            responses = responses.replace("```json", "");
+            responses = responses.replace("```", "");
+            console.log(responses)
+            const recipes = JSON.parse(responses)['recipes'];
 
             // Make sure recipes is not empty
             if (recipes.length === 0){
@@ -152,8 +156,10 @@ router.post('/process_items', (req, res) => {
                 res.redirect('/home')
                 return;
             } 
+            let userAllergies = req.session.allergies ? req.session.allergies : 'None';
+
             res.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
-                allergies: userAllergies, loggedin: true, username: request.session.username, 
+                allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
                 item_message : '', recipes : recipes});
     
             
