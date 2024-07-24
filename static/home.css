@@ -114,11 +114,13 @@ body {
 }
 
 #headers .select-all {
-    padding: 0.5vw 2vw;
+    padding: 0.6vw 2vw;
     background-color: rgb(208, 129, 199);
     color: var(--font-color);
+    font-size: 1rem;
     border: none;
     border-radius: 5px;
+    text-wrap: nowrap;
 }
 
 button:hover {
@@ -130,4 +132,26 @@ button:hover {
     background-color: rgb(247, 56, 56);
     color: var(--font-color);
     padding: 5px 10px;
+}
+
+.items .item-image {
+    height: 50px;
+}
+
+.items table {
+    height: 300px;
+    display: block;
+    overflow-y: scroll;
+    padding: 0;
+    border: none;
+}
+
+.items input[type="checkbox"] {
+    position: relative;
+    left: calc(50% - 12.5px);
+    height: 25px;
+    width: 25px;
+    border-radius: 5px;
+    border:2px solid #292828;
+    cursor: pointer;
 }
