@@ -101,7 +101,7 @@ router.get('/', async (request, response) => {
         } else {
             // Not logged in
             response.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
-                allergies: "None", loggedin: false, item_message : '', recipes : {}});
+                allergies: "None", loggedin: false, item_message : request.flash('item_message'), recipes : {}});
         }
     } 
         catch (error) {
@@ -141,14 +141,19 @@ router.post('/', (req, res) => {
             const prompt = `Can you recommend me some online recipes with their URL using\
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
         avoid these allergies: ${req.body.allergies}. \
-        Please output only the json form of Recipe_name, Description, and URL. \
-        (Please use the exact header as defined and do not include any other text)`;
+        Please output only the json form of Recipe_name, Description, and URL 
+        ex: [{
+  "Recipe_name": "One Pot Cheeseburger Pasta",
+  "Description": "This easy one pot cheeseburger pasta recipe is perfect for busy weeknights. It's made with ground beef, pasta, cheese, and a creamy tomato sauce.",
+  "URL": "https://www.momontimeout.com/easy-one-pot-cheeseburger-pasta/"
+}]. \
+        (Please use the exact header as defined, do not include any other text, and don't start a new recipe if there are not enough tokens)`;
             const result = await geminiModel.generateContent(prompt);
             var responses = result.response.text();
             responses = responses.replace("```json", "");
             responses = responses.replace("```", "");
             console.log(responses)
-            const recipes = JSON.parse(responses)['recipes'];
+            const recipes = JSON.parse(responses);
 
             // Make sure recipes is not empty
             if (recipes.length === 0){
@@ -160,7 +165,7 @@ router.post('/', (req, res) => {
 
             res.render(path.join(__dirname + '/home.ejs'), {location: '', items : items, 
                 allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
-                item_message : '', recipes : recipes});
+                item_message : req.flash('item_message'), recipes : recipes});
     
             
             // Insert recipe into the table

@@ -151,9 +151,9 @@
                     <% if(recipes.length > 0) {%>
                         <% recipes.forEach(recipe=> { %>
                             <tr>
-                                <td><%= recipe.recipe_name %></td>
-                                <td><%= recipe.description %></td>
-                                <td><%= recipe.url %></td>
+                                <td><%= recipe.Recipe_name %></td>
+                                <td><%= recipe.Description %></td>
+                                <td><a href="<%= recipe.URL %>">Link to Recipe</a></td>
                                 <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
                                     <i class="fa fa-regular fa-bookmark"></i>
                                 </button></td>
