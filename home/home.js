@@ -125,6 +125,12 @@ router.post('/', (req, res) => {
         // flash a message saying please pick at least one item
         return;
     }
+
+    const python = spawn('python', ['../optimization.py', req.body.itemCheckbox, "cost list", req.body.budget]);
+            python.on('close', (code) => {
+                console.log(`child process close all stdio with code: ${code}`);
+            })
+    
     const geminiConfig = {
     temperature: req.body.creativity / 10,
     maxOutputTokens: 4096,
@@ -216,7 +222,7 @@ async function saverecipe(recipe_name, recipe_description, recipe_url) {
         console.log(`Successfully saved recipe: ${recipe_name}`)
         const retrieverecipequery = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
         const retrieveuserquery = "SELECT user_id FROM user WHERE username = ?"
-        
+
         const storequery = "INSERT INTO `saved` ('recipe"
     }
     catch (error) {
