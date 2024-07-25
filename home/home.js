@@ -82,7 +82,7 @@ router.get('/', async (request, response) => {
             console.log("truncated table")
             // Run the python script to load table items with newest deals
             // !!! Bug in this spawn line
-            const python = spawn("python3", [__dirname + '/../scrape_items.py']);
+            const python = spawn("/python3", [__dirname + '/../scrape_items.py']);
             python.on('close', (code) => {
                 console.log(`child process close all stdio with code: ${code}`);
             })
@@ -137,15 +137,30 @@ router.post('/', (req, res) => {
 
     const generate = async () => {
         try {
-            const prompt = `Can you recommend me some online recipes with their URL using\
+            const prompt = `Can you recommend 1-3 different recipes using\
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
-        avoid these allergies: ${req.body.allergies}. \
-        Please output only the json form of Recipe_name, Description, and URL 
+        avoid these allergies: ${req.body.allergies}. You do not have to include every ingredient I requested in every recipe. Use the ones you find suitable.\
+        Please also include other ingredients needed in the recipe. Make sure to label each step of the instructions with 1., 2., 3., etc.\ 
+        Please output only the json form of Recipe_name, Ingredients, and Instructions. Ingredients and Intructions should both be one long string.
         ex: [{
-  "Recipe_name": "One Pot Cheeseburger Pasta",
-  "Description": "This easy one pot cheeseburger pasta recipe is perfect for busy weeknights. It's made with ground beef, pasta, cheese, and a creamy tomato sauce.",
-  "URL": "https://www.momontimeout.com/easy-one-pot-cheeseburger-pasta/"
-}]. \
+        "Recipe_name": "One Pot Cheeseburger Pasta",
+        "Ingredients": "1 lb ground beef
+            1 lb Italian sausage (remove casing if desired)
+            1 onion, chopped
+            1 green bell pepper, chopped
+            1 (14.5 oz) can diced tomatoes, undrained
+            1 (15 oz) can kidney beans, drained & rinsed
+            1/2 cup beef broth
+            1 tsp dried oregano
+            1/2 tsp salt
+            1/4 tsp black pepper
+            1 head romaine lettuce, chopped
+            1/4 cup shredded cheddar cheese (optional)",
+        "Instructions": "1. Brown the ground beef and sausage in a large skillet over medium heat. Drain off any excess fat.
+        2. Add the onion and green pepper and cook until softened, about 5 minutes.
+        3. Stir in diced tomatoes, kidney beans, beef broth, oregano, salt, and pepper. Bring to a boil, then reduce heat and simmer for 15 minutes, or until flavors meld.
+        4. Serve hot over a bed of chopped romaine lettuce and top with shredded cheddar cheese (optional)."
+        }]. \
         (Please use the exact header as defined, 
         do not include any other text, and don't start a new recipe if there are not enough tokens)`;
             const result = await geminiModel.generateContent(prompt);
@@ -154,7 +169,7 @@ router.post('/', (req, res) => {
             responses = responses.replace("```", "");
             console.log(responses)
             const recipes = JSON.parse(responses);
-
+            console.log(recipes);
             console.log(recipes.length)
             // Make sure recipes is not empty
             if (recipes.length === 0){

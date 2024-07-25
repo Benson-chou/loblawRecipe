@@ -107,7 +107,7 @@
                                 <% if(items) {%>
                                     <% items.forEach(item=> { %>
                                         <tr>
-                                            <td><input type="checkbox" name="itemCheckbox" value="<%= item.itemname %>"></td>
+                                            <td><input type="checkbox" name="itemCheckbox" value=<%= item.item_name %>></td>
                                             <td><img src="<%= item.image%>" class="item-image"></td>
                                             <td><%= item.item_name %></td>
                                             <td><%= item.price %></td>
@@ -148,8 +148,8 @@
                 <table id="headers">
                     <thead>
                         <th id="recipename">Recipe Name</th>
-                        <th id="Description">Description</th>
-                        <th id="url">Recipe Url</th>
+                        <th id="ingredients">Ingredients</th>
+                        <th id="instuctions">Instructions</th>
                         <th id="save">Save</th>
                     </thead>
                     <tbody>
@@ -158,8 +158,8 @@
                             <% recipes.forEach(recipe=> { %>
                                 <tr>
                                     <td><%= recipe.Recipe_name %></td>
-                                    <td><%= recipe.Description %></td>
-                                    <td><a href="<%= recipe.URL %>">Link to Recipe</a></td>
+                                    <td><%= recipe.Ingredients %></td>
+                                    <td><%= recipe.Instructions %></td>
                                     <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
                                         <i class="fa fa-regular fa-bookmark"></i>
                                     </button></td>
