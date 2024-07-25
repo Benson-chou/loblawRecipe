@@ -82,7 +82,7 @@ router.get('/', async (request, response) => {
             console.log("truncated table")
             // Run the python script to load table items with newest deals
             // !!! Bug in this spawn line
-            const python = spawn("/opt/homebrew/bin/python3", [__dirname + '/../scrape_items.py']);
+            const python = spawn("python3", [__dirname + '/../scrape_items.py']);
             python.on('close', (code) => {
                 console.log(`child process close all stdio with code: ${code}`);
             })
