@@ -125,12 +125,19 @@ router.post('/', (req, res) => {
         // flash a message saying please pick at least one item
         return;
     }
-
-    const python = spawn('python', ['../optimization.py', req.body.itemCheckbox, "cost list", req.body.budget]);
-            python.on('close', (code) => {
-                console.log(`child process close all stdio with code: ${code}`);
-            })
     
+    // Need to change the arguments to `${req.body.itemCheckbox}`, `${req.body.itemPrice}` (hopefully)
+    const python = spawn('python3', [__dirname + '/../optimization.py', "['apple', 'banana', 'candy', 'bread']", "[3.99, 4.00, 5.99, 6.99]", req.body.budget]);
+    
+    // This part is being skipped somehow
+    python.stdout.on('data', (data) => {
+        console.log('result?');
+        dataToSend = data.toString();
+    });
+    python.on('close', (code) => {
+        console.log(`child process close all stdio with code: ${code}`);
+    })
+
     const geminiConfig = {
     temperature: req.body.creativity / 10,
     maxOutputTokens: 4096,
@@ -141,8 +148,10 @@ router.post('/', (req, res) => {
         geminiConfig
     });
 
+    // console.log()
     const generate = async () => {
         try {
+            // Will send the dataToSend from optimization script to send in instead of itemCheckbox
             const prompt = `Can you recommend 1-3 different recipes using\
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
         avoid these allergies: ${req.body.allergies}. You do not have to include every ingredient I requested in every recipe. Use the ones you find suitable.\
@@ -189,20 +198,6 @@ router.post('/', (req, res) => {
                 allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
                 item_message : req.flash('item_message'), recipes : recipes});
     
-            
-            // Insert recipe into the table
-            // const insertRecipe = (recipe) => {
-            //     const insertquery = "INSERT INTO recipes (recipe_name, description, url)\
-            //         VALUES (?, ?, ?)"
-            //     connection.query(insertquery, [recipe['Recipe_name'], recipe['Description'], recipe['URL']], (err, res) => {
-            //         if (err) throw err;
-            //         console.log(`Inserted recipe: ${recipe['Recipe name']}`);
-            //     });
-            // };
-            // recipes.array.forEach(recipe => {
-            //     insertRecipe(recipe);
-            // });
-            // Load the response into database first and then create tables? 
         }catch (error){
             console.log("response error", error);
         }
