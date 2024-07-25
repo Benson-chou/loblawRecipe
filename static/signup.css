@@ -9,9 +9,11 @@
     font-size: 16px;
     margin: 0;
 }
+
 body {
-    background-color: #435165;
+    background-color: rgba(10, 65, 10, 0.75);
 }
+
 .signup {
     width: 400px;
     background-color: var(--font-color);
@@ -48,13 +50,14 @@ body {
     padding: 0 15px;
 }
 .signup form input[type="submit"] {
-    width: 100%;
+    width: 75%;
     padding: 15px;
-   margin-top: 20px;
+    margin: 15px 0;
     background-color: var(--theme-color);
     border: 0;
     cursor: pointer;
     font-weight: bold;
+    border-radius: 30px;
     color: var(--font-color);
     transition: background-color 0.2s;
 }
@@ -75,7 +78,7 @@ body {
 .header {
     display: flex;
     justify-content: space-between;
-    background-color: var(--theme-color);
+    background-color: transparent;
     padding: 2vh;
 }
 
@@ -84,6 +87,7 @@ body {
     align-items: center;
     color: var(--font-color);
     font-weight: bold;
+    font-size: large;
 }
 
 .header .links {
@@ -120,4 +124,22 @@ body {
     color: var(--font-color);
     padding: 5px 10px;
     width: 90%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+}
+
+.image {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.image img {
+    width: 90%;
+    height: 85vh;
+    object-fit: cover;
+    box-shadow: 6px 6px 0px 15px rgb(1, 70, 1);
 }

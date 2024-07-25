@@ -155,6 +155,7 @@ router.post('/', (req, res) => {
             console.log(responses)
             const recipes = JSON.parse(responses);
 
+            console.log(recipes.length)
             // Make sure recipes is not empty
             if (recipes.length === 0){
                 req.flash('item_message', 'No recipes were generated. Please try again!')

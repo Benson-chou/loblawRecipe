@@ -29,35 +29,41 @@
 			</div>
 		</div>
 		
-		<div class="signup">
-			<h1>Signup</h1>
-			<form id="signupForm" action="/signup" method="post">
-				<label for="username">
-					<!-- font awesome icon -->
-					<i class="fas fa-user"></i>
-				</label>
-				<input type="text" name="username" placeholder="Username" id="username" required>
-				<label for="password">
-					<i class="fas fa-lock"></i>
-				</label>
-				<input type="password" name="password" placeholder="Password" id="password" required>
-                <label for="postal code">
-                    <i class="fas fa-location-dot"></i>
-                </label>
-                <input type="text" name="postalCode" placeholder="Postal Code" id="postal code">
-                <label for="allergies">
-                    <i class="fas fa-circle-exclamation"></i>
-                </label>
-                <input type="text" name="allergies" placeholder="Allergies: Nuts, dairy...etc." id="allergies">
-				<% if(message.length > 0) {%>
-					<div class="alert-fail">
-						<div class="alert-text">
-							<%= message %>
+		<div class="container">
+			<div class="image">
+				<img src="/groceries.jpg" alt="Groceries">
+			</div>
+
+			<div class="signup">
+				<h1>Signup</h1>
+				<form id="signupForm" action="/signup" method="post">
+					<label for="username">
+						<!-- font awesome icon -->
+						<i class="fas fa-user"></i>
+					</label>
+					<input type="text" name="username" placeholder="Username" id="username" required>
+					<label for="password">
+						<i class="fas fa-lock"></i>
+					</label>
+					<input type="password" name="password" placeholder="Password" id="password" required>
+							<label for="postal code">
+								<i class="fas fa-location-dot"></i>
+							</label>
+							<input type="text" name="postalCode" placeholder="Postal Code" id="postal code">
+							<label for="allergies">
+								<i class="fas fa-circle-exclamation"></i>
+							</label>
+							<input type="text" name="allergies" placeholder="Allergies: Nuts, dairy...etc." id="allergies">
+					<% if(message.length > 0) {%>
+						<div class="alert-fail">
+							<div class="alert-text">
+								<%= message %>
+							</div>
 						</div>
-					</div>
-				<% } %>
-				<input type="submit" name="signup" value="Sign Up">
-			</form>
+					<% } %>
+					<input type="submit" name="signup" value="Sign Up">
+				</form>
+			</div>
 		</div>
 	</body>
 </html>
