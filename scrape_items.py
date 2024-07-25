@@ -29,7 +29,7 @@ time.sleep(2)
 body = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.TAG_NAME, "body"))
 )
-# body = driver.find_element(By.TAG_NAME, "body")
+
 text = body.text
 
 parsed_data = json.loads(text)
@@ -77,19 +77,3 @@ pool = create_engine(
 
 food_df.to_sql(name='items', con=pool, if_exists='append', index=False)
 print("Food successfully loaded into items table!")
-
-# db_user = os.getenv('CLOUD_USER')
-# db_password = os.getenv('CLOUD_PASSWORD')
-# db_host = os.getenv('CLOUD_HOST')
-# db_name = os.getenv('CLOUD_DB_NAME')
-# connection_url = f"mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}?charset=utf8mb4"
-# engine = create_engine(connection_url, echo=True)
-
-# print(connection_url)
-# try:
-#     with engine.connect() as conn:
-#         food_df.to_sql(name='items', con=conn, if_exists='append', index=False)
-#         conn.commit()  # Commit the transaction
-#         print("Food successfully loaded into items table!")
-# except Exception as e:
-#     print(f"Error loading items into database: {e}")
