@@ -31,20 +31,24 @@
                 })
             }
         }
-        function savebutton() {
+        function savebutton(recipe_name, recipe_description, recipe_url, loggedin) {
             var save_button = document.querySelector('.save_button');
             console.log(save_button.children)
             console.log(save_button.childNodes[0].nextSibling.className)
             var icon_class = save_button.childNodes[0].nextSibling.className
             // This works but not sure y regular and solid looks the same :(
+            if (!loggedin) {
+                alert('Please Log in/Sign up to save ')
+                return;
+            }
             if (icon_class === "fa fa-regular fa-bookmark") {
                 save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-flag"
                 // Save the recipe here
-                saverecipe()
+                saverecipe(recipe_name, recipe_description, recipe_url)
             } else {
                 save_button.childNodes[0].nextSibling.className = "fa fa-regular fa-bookmark"
                 // Delete the recipe here 
-                deleterecipe()
+                deleterecipe(recipe_name, recipe_description, recipe_url)
             }
         }
     </script>
@@ -154,11 +158,11 @@
                                 <td><%= recipe.Recipe_name %></td>
                                 <td><%= recipe.Description %></td>
                                 <td><a href="<%= recipe.URL %>">Link to Recipe</a></td>
-                                <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
+                                <td><button type="button" class="save_button" onclick="savebutton('<%=recipe.Recipe_name%>', '<%=recipe.Description%>',' <%=recipe.URL%>', '<%=loggedin%>')" value="<%= recipe.id%>">
                                     <i class="fa fa-regular fa-bookmark"></i>
                                 </button></td>
                                 <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
-                                 <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->
+                                <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->
                             </tr>
                         <% }); %>
                     <% } %>

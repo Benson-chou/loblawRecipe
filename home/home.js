@@ -27,7 +27,7 @@ const pool = mysql.createPool({
 });
 
 router.use(flash())
-
+var username = 'test';
 // This is just for testing
 var items = [
     {
@@ -94,6 +94,7 @@ router.get('/', async (request, response) => {
             }
 
         if (request.session.loggedin) {
+            username = request.session.username
             let userAllergies = request.session.allergies !== undefined ? request.session.allergies : 'None';
             response.render(path.join(__dirname + '/home.ejs'), {location: '', items : request.session.items, 
                 allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
@@ -187,12 +188,38 @@ router.post('/', (req, res) => {
     generate()
 })
 
-function saverecipe() {
+// Still needa add user_id with this
+async function saverecipe(recipe_name, recipe_description, recipe_url) {
+    // Needa check if its logged in, if its not, then we send alert that only logged in users can save
+    const savequery = "INSERT INTO `recipes` (`recipe_name`, `description`, `url`) VALUES (?, ?, ?)"
+    
+    try {
+        const connection = await pool.getConnection();
+        const [results] = await connection.query(savequery, [recipe_name, recipe_description, recipe_url])
 
+        console.log(`Successfully saved recipe: ${recipe_name}`)
+        const retrieverecipequery = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
+        const retrieveuserquery = "SELECT user_id FROM user WHERE username = ?"
+        
+        const storequery = "INSERT INTO `saved` ('recipe"
+    }
+    catch (error) {
+        console.log('Failed to save recipe')
+    }
 }
 
-function deleterecipe() {
-
+// Needa think more about this
+async function deleterecipe(recipe_name, recipe_description, recipe_url) {
+    // Needa check if its logged in, if its not, then we send alert that only logged in users can save
+    const savequery = "DELETE FROM `recipes`(`recipe_name`, `description`, `url`) VALUES (?, ?, ?)"
+    try {
+        const connection = await pool.getConnection();
+        const [results] = await connection.query(savequery, [recipe_name, recipe_description, recipe_url])
+        console.log(`Successfully saved recipe: ${recipe_name}`)
+    }
+    catch (error) {
+        console.log('Failed to save recipe')
+    }
 }
 
 module.exports = router;
