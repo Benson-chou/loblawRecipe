@@ -129,9 +129,9 @@
                         <input type="number" step=any min="0" name = budget id="budget" required>
                         <label for="additional"> Allergies:</label>
                         <% if(allergies) {%>
-                            <input type="text" name="allergies" value="<%=allergies%>" placeholder="Allergies">
+                            <input type="text" name="allergies" value=<%=allergies%>>
                         <% } else{ %>
-                            <input type="text" name="allergies" placeholder="Allergies" value = 'None'>
+                            <input type="text" name="allergies" value = 'None'>
                         <% } %>
                         </section>
                         <% if(item_message.length > 0) {%>

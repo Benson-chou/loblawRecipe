@@ -21,7 +21,7 @@ loblaw_items = []
 # location = 
 
 # url = f"https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=${location}&q=loblaws"
-url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=m5s1z6&q=loblaws"
+url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=m5b1r7&q=loblaws"
 driver.get(url)
 print("hi")
 time.sleep(2)

@@ -41,11 +41,15 @@ router.post('/', async (req, res) => {
             req.flash('message', 'This username is taken. Please insert another username')
             res.redirect('/signup')
         } else {
+            // Need to strip white space, change into lower case, make sure it is a valid postal code before we save to database
+            let cleanPostal = postalCode.toLowerCase().replace(/\s+/g, '');;
             connection.query('INSERT INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)',
-            [username, password, postalCode, allergies]);
+            [username, password, cleanPostal, allergies]);
             req.session.username = username;
             req.session.loggedin = true;
+            req.session.random = "happy happy"; //interesting, can only access username and loggedin in home.ejs? the rest comes back as not defined
             req.session.allergies = allergies;
+            req.session.postal = cleanPostal;
             res.redirect('/home');
         } connection.release();
     }
