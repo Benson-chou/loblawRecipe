@@ -13,17 +13,19 @@ import os
 # pip install python-dotenv
 from dotenv import load_dotenv
 load_dotenv()
+import sys
 # pip install "cloud-sql-python-connector[pymysql]"
 
 driver = webdriver.Chrome()
 loblaw_items = []
 
-# location = 
-
-# url = f"https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=${location}&q=loblaws"
-url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=m5b1r7&q=loblaws"
+location = sys.argv[1]
+print(sys.argv)
+url = f"https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=${location}&q=loblaws"
+# url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=m5b1r7&q=loblaws"
+# url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=t2g2w1&q=loblaws"
 driver.get(url)
-print("hi")
+print(url)
 time.sleep(2)
 
 body = WebDriverWait(driver, 10).until(
@@ -33,7 +35,8 @@ body = WebDriverWait(driver, 10).until(
 text = body.text
 
 parsed_data = json.loads(text)
-for d in parsed_data["items"]: 
+items_data = parsed_data["items"] if len(parsed_data["items"]) != 0 else parsed_data["related_items"]
+for d in items_data: 
     loblaw_item = {
         "item_id": d["id"], 
         "item_name": d["name"],
@@ -41,7 +44,7 @@ for d in parsed_data["items"]:
         "image": d["clean_image_url"],
         "valid_from": d["valid_from"],
         "valid_to": d["valid_to"],
-        "categories": d["_L2"],
+        "categories": d["_L2"] if "_L2" in d.keys() else None,
         "price": d["current_price"]
     }
     loblaw_items.append(loblaw_item)

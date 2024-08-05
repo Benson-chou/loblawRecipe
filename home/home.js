@@ -74,7 +74,7 @@ router.get('/', async (request, response) => {
         // Root cause being forgot to add promise to require SQL line, so we are not awaiting for the connection to establish
         const connection = await pool.getConnection();
         const [results] = await connection.query(checkquery, [today, today]);
-
+        console.log(results)
         if (results.length == 0) {
             // Clear the table first
             const clearquery = 'TRUNCATE TABLE items'
@@ -82,15 +82,32 @@ router.get('/', async (request, response) => {
             console.log("truncated table")
             // Run the python script to load table items with newest deals
             // !!! Bug in this spawn line
-            const python = spawn("/python3", [__dirname + '/../scrape_items.py']);
+            let userLocation;
+            if (request.session.user !== undefined) {
+                if (request.session.user.preferred_location !== null) userLocation = request.session.user.preferred_location;
+                else userLocation = "m5b1r7";
+            } else {
+                if (request.session.postal !== "") userLocation = request.session.postal;
+                else userLocation = "m5b1r7"
+            }
+            const python = spawn("/usr/bin/python3", [__dirname + '/../scrape_items.py', userLocation]);
             python.on('close', (code) => {
                 console.log(`child process close all stdio with code: ${code}`);
             })
+            python.stdout.on('data', (data) => {
+                console.log(`stdout: ${data}`);
+            });
+              
+            python.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+            });
         }
+
         const getquery = 'SELECT * FROM items'
         const [db_items] = await connection.query(getquery);
             if (db_items.length > 0){
                 request.session.items = db_items;
+                console.log("should work")
             }
 
         if (request.session.loggedin) {
@@ -104,7 +121,7 @@ router.get('/', async (request, response) => {
     
         } else {
             // Not logged in
-            response.render(path.join(__dirname + '/home.ejs'), {location: '', items : request.session.items, 
+            response.render(path.join(__dirname + '/home.ejs'), {location: "m5b1r7", items : request.session.items, 
                 allergies: "None", loggedin: false, item_message : request.flash('item_message'), recipes : {}});
         }
     } 
