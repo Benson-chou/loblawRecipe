@@ -20,12 +20,8 @@ driver = webdriver.Chrome()
 loblaw_items = []
 
 location = sys.argv[1]
-print(sys.argv)
 url = f"https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=${location}&q=loblaws"
-# url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=m5b1r7&q=loblaws"
-# url = "https://backflipp.wishabi.com/flipp/items/search?locale=en-ca&postal_code=t2g2w1&q=loblaws"
 driver.get(url)
-print(url)
 time.sleep(2)
 
 body = WebDriverWait(driver, 10).until(

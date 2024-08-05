@@ -64,66 +64,47 @@ var items = [
 
 // http://localhost:3000/home
 router.get('/', async (request, response) => {
-    // Get the items list here!
-    // First step: Get the current date and check if there are any results that include this date
-    let today = new Date().toISOString().slice(0, 10)
-    // We need to find a place to clear the older deals!!!
-    const checkquery = 'SELECT * FROM items WHERE valid_from <= ? AND valid_to >= ?';
     try{
-        // Issue from last commit was that connection is undefined, so running connection.query gives an error
-        // Root cause being forgot to add promise to require SQL line, so we are not awaiting for the connection to establish
         const connection = await pool.getConnection();
-        const [results] = await connection.query(checkquery, [today, today]);
-        console.log(results)
-        if (results.length == 0) {
-            // Clear the table first
-            const clearquery = 'TRUNCATE TABLE items'
-            connection.query(clearquery);
-            console.log("truncated table")
-            // Run the python script to load table items with newest deals
-            // !!! Bug in this spawn line
-            let userLocation;
-            if (request.session.user !== undefined) {
-                if (request.session.user.preferred_location !== null) userLocation = request.session.user.preferred_location;
-                else userLocation = "m5b1r7";
-            } else {
-                if (request.session.postal !== "") userLocation = request.session.postal;
-                else userLocation = "m5b1r7"
-            }
-            const python = spawn("/usr/bin/python3", [__dirname + '/../scrape_items.py', userLocation]);
-            python.on('close', (code) => {
-                console.log(`child process close all stdio with code: ${code}`);
-            })
-            python.stdout.on('data', (data) => {
-                console.log(`stdout: ${data}`);
-            });
-              
-            python.stderr.on('data', (data) => {
-            console.error(`stderr: ${data}`);
-            });
-        }
+        const clearquery = 'TRUNCATE TABLE items'
+        await connection.query(clearquery);
 
-        const getquery = 'SELECT * FROM items'
-        const [db_items] = await connection.query(getquery);
-            if (db_items.length > 0){
-                request.session.items = db_items;
-                console.log("should work")
-            }
-
-        if (request.session.loggedin) {
-            // Case 1: user got to home page from *LOGIN PAGE*: request.session.user contains all user info
-            // Case 2: user got to home page from *SIGN UP PAGE*: request.session.allergies contains allergies 
-            // (there is no request.session.user because this object is the result returned from a database query, which we do not have when user signs up and we write into the database only. We can create the user object but since there is only 3 things to pass to home page, I decided that saving to a var is faster.)
-            let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== "" ? request.session.allergies : null);
-            let userLocation = request.session.user !== undefined ? request.session.user.preferred_location : (request.session.postal !== "" ? request.session.postal : "m5b1r7");
-            response.render(path.join(__dirname + '/home.ejs'), {location: userLocation, items : request.session.items, 
-                allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
-    
+        let userLocation;
+        if (request.session.user !== undefined) {
+            userLocation = request.session.user.preferred_location || "m5b1r7";
         } else {
-            // Not logged in
-            response.render(path.join(__dirname + '/home.ejs'), {location: "m5b1r7", items : request.session.items, 
-                allergies: "None", loggedin: false, item_message : request.flash('item_message'), recipes : {}});
+            userLocation = request.session.postal || "m5b1r7";
         }
+        const python = spawn("/usr/bin/python3", [__dirname + '/../scrape_items.py', userLocation]);
+
+        python.on('close', async (code) => {
+            if (code !== 0) {
+                console.error(`Python script exited with code ${code}`);
+                response.status(500).send('Internal Server Error');
+                return;
+            }
+
+            const getquery = 'SELECT * FROM items'
+            const [db_items] = await connection.query(getquery);
+                if (db_items.length > 0){
+                    request.session.items = db_items;
+                }
+
+            if (request.session.loggedin) {
+                // Case 1: user got to home page from *LOGIN PAGE*: request.session.user contains all user info
+                // Case 2: user got to home page from *SIGN UP PAGE*: request.session.allergies contains allergies 
+                // (there is no request.session.user because this object is the result returned from a database query, which we do not have when user signs up and we write into the database only. We can create the user object but since there is only 3 things to pass to home page, I decided that saving to a var is faster.)
+                let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== "" ? request.session.allergies : null);
+                let userLocation = request.session.user !== undefined ? request.session.user.preferred_location : (request.session.postal !== "" ? request.session.postal : "m5b1r7");
+                response.render(path.join(__dirname + '/home.ejs'), {location: userLocation, items : request.session.items, 
+                    allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
+        
+            } else {
+                // Not logged in
+                response.render(path.join(__dirname + '/home.ejs'), {location: "m5b1r7", items : request.session.items, 
+                    allergies: "None", loggedin: false, item_message : request.flash('item_message'), recipes : {}});
+            }
+        });
     } 
         catch (error) {
             console.error('Error loading home page (loading items): ', error);
