@@ -4,6 +4,7 @@
     <title>Login</title>
     <!-- the form awesome library is used to add icons to our form -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <!-- include the stylesheet file -->
     <link href="/home.css" rel="stylesheet" type="text/css">
     <style>
@@ -121,7 +122,10 @@
                             </tbody>
                         </table>
                         <div class="location">
-                            <p>Current location: <span style="color: yellow; font-weight: bold"><%= location %></span></p>
+                            <p>
+                                Current location: <span class="current-postal" style="color: yellow; font-weight: bold"><%= location %></span>
+                                <span class="material-symbols-outlined" title="Change in profile page">info</span>
+                            </p>
                         </div>
                         <section id="parameters">
                         <label for="Creativity">Creativity: </label>

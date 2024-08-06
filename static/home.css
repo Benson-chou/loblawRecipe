@@ -172,12 +172,20 @@ button:hover {
     z-index: 1;
 }
 
-p {
+.location p {
     color: var(--font-color);
-}
-
-.location {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     padding-top: 10px;
+}
+
+span.current-postal {
+    padding-left: 8px;
+}
+
+span.material-symbols-outlined {
+    font-size: 18px;
+    padding-left: 4px;
+    cursor: pointer;
 }
