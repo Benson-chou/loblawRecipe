@@ -1,0 +1,208 @@
+:root {
+    --theme-color: #3274d6;
+    --font-color: #ffffff
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
+    font-size: 16px;
+}
+
+body {
+    background-color: #7897c3;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    background-color: transparent;
+    padding: 2vh;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    color: var(--font-color);
+    font-weight: bold;
+    font-size: large;
+}
+
+.header .links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3rem;
+}
+
+.header ul {
+    list-style-type: none;
+}
+
+.header a, a:visited, li {
+    text-decoration: none;
+    color: var(--font-color);
+}
+
+.header .github {
+    display: flex;
+}
+
+.header .text-logo {
+    width: 3.5rem;
+}
+
+.header .cat-logo {
+    width: 1.8rem;
+}
+
+.items {
+    padding: 1rem;
+}
+
+.items h2 {
+    padding: 0.5rem;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 200;
+}
+
+.items #headers thead {
+    background-color: #b7c7df;
+}
+
+.items #headers tbody tr:nth-child(odd) {
+    background-color: #ebf1ed;
+}
+
+.items #headers tr:nth-child(even) {
+    background-color: #dbdbdb;
+}
+
+#parameters {
+    display: flex;
+    flex-direction: column;
+}
+
+#parameters label,
+#parameters output {
+    padding: 0.3rem;
+    margin: 0.3rem 0;
+    color: white;
+}
+
+#parameters input {
+    width: 20%;
+}
+
+#parameters input[type="text"] {
+    padding: 6px 8px;
+    margin-bottom: 1rem;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+}
+
+#parameters input[type="text"]:focus {
+    box-shadow: 4px 4px 6px black;
+}
+
+.creativity-container {
+    display: flex;
+    gap: 1rem;
+}
+
+#headers .select-all {
+    padding: 0.6vw 2vw;
+    background-color: rgb(208, 129, 199);
+    color: var(--font-color);
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    text-wrap: nowrap;
+}
+
+button:hover {
+    cursor: pointer;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);;
+}
+
+.alert-fail {
+    background-color: rgb(247, 56, 56);
+    color: var(--font-color);
+    padding: 5px 10px;
+}
+
+.items .item-image {
+    height: 50px;
+    transition: transform 0.25 ease;
+}
+
+.items .item-image:hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: scale(10);
+    
+}
+
+.items table {
+    height: 300px;
+    display: block;
+    overflow-y: scroll;
+    padding: 0;
+    border: none;
+}
+
+.items input[type="checkbox"] {
+    position: relative;
+    left: calc(50% - 12.5px);
+    height: 25px;
+    width: 25px;
+    border-radius: 5px;
+    border:2px solid #292828;
+    cursor: pointer;
+}
+
+.items thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.location p {
+    color: var(--font-color);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 10px;
+}
+
+span.current-postal {
+    padding-left: 8px;
+}
+
+span.material-symbols-outlined {
+    font-size: 18px;
+    padding-left: 4px;
+}
+
+.validation-image {
+    height:19px; 
+    width:20px;
+    display: none;
+}
+
+/* Error styling */
+.validation-error {
+    background-color: #ff0000;
+    background-image: url('redcross.png');
+}
+
+/* Success styling */
+.validation-success {
+    background-color: #00ff00;
+    background-image: url('greencheck.png');
+}
