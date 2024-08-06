@@ -172,3 +172,12 @@ button:hover {
     z-index: 1;
 }
 
+p {
+    color: var(--font-color);
+}
+
+.location {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+}
