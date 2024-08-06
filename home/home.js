@@ -95,16 +95,21 @@ router.get('/', async (request, response) => {
                 // Case 2: user got to home page from *SIGN UP PAGE*: request.session.allergies contains allergies 
                 // (there is no request.session.user because this object is the result returned from a database query, which we do not have when user signs up and we write into the database only. We can create the user object but since there is only 3 things to pass to home page, I decided that saving to a var is faster.)
                 let userAllergies = request.session.user !== undefined ? request.session.user.allergies : (request.session.allergies !== "" ? request.session.allergies : null);
-                let userLocation = request.session.user !== undefined ? request.session.user.preferred_location : (request.session.postal !== "" ? request.session.postal : "m5b1r7");
-                
-                // console.log(`request.session.allergies: ${request.session.allergies}`);
-                // console.log(`userAllergies: ${userAllergies}`);
-                response.render(path.join(__dirname + '/home.ejs'), {location: userLocation, items : request.session.items, 
+                let userLocationPass;
+                if (request.session.user !== undefined) {
+                    userLocationPass = request.session.user.preferred_location || "m5b1r7 (default)";
+                } else {
+                    userLocationPass = request.session.postal || "m5b1r7 (default)";
+                }
+                // console.log(`request.session.postal: ${request.session.postal}`)
+                // console.log(`userLocation: ${userLocation}`);
+                // console.log(`userLocationPass: ${userLocationPass}`);
+                response.render(path.join(__dirname + '/home.ejs'), {location: userLocationPass, items : request.session.items, 
                     allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
         
             } else {
                 // Not logged in
-                response.render(path.join(__dirname + '/home.ejs'), {location: "m5b1r7", items : request.session.items, 
+                response.render(path.join(__dirname + '/home.ejs'), {location: "m5b1r7 (default)", items : request.session.items, 
                     allergies: "None", loggedin: false, item_message : request.flash('item_message'), recipes : {}});
             }
         });
