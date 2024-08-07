@@ -33,7 +33,7 @@
                 })
             }
         }
-        function savebutton(recipe_name, recipe_description, recipe_url, loggedin) {
+        function savebutton(recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
             var save_button = document.querySelector('.save_button');
             console.log(save_button.children)
             console.log(save_button.childNodes[0].nextSibling.className)
@@ -46,11 +46,11 @@
             if (icon_class === "fa fa-regular fa-bookmark") {
                 save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-flag"
                 // Save the recipe here
-                saverecipe(recipe_name, recipe_description, recipe_url)
+                saverecipe(recipe_name, recipe_ingredients, recipe_description, username)
             } else {
                 save_button.childNodes[0].nextSibling.className = "fa fa-regular fa-bookmark"
                 // Delete the recipe here 
-                deleterecipe(recipe_name, recipe_description, recipe_url)
+                deleterecipe(recipe_name, username)
             }
         }
     </script>
@@ -65,10 +65,11 @@
             <div class="logo">Loblaws Recipe</div>
             <ul class="links">
                 <% if(!loggedin) {%>
+                    <li><a href="../user/">Guest</a></li>
                     <li><a href="/">Login</a></li>
                     <li><a href="../signup/">Sign up</a></li>
                 <% } else {%>
-                    <li><%= username %></li>
+                    <li><a href="../user/"><%= username %></a></li>
                     <li><a href="/">Log out</a></li>
                 <% }%> 
                 <li>
@@ -166,14 +167,16 @@
                         <th id="save">Save</th>
                     </thead>
                     <tbody>
-                        <!-- Need to remove this part for the page to load fine now -->
                         <% if(recipes.length > 0) {%>
                             <% recipes.forEach(recipe=> { %>
                                 <tr>
                                     <td><%= recipe.Recipe_name %></td>
                                     <td><%= recipe.Ingredients %></td>
                                     <td><%= recipe.Instructions %></td>
-                                    <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
+                                    <!-- Not sure if the variables work like this for onclick function -->
+                                    <td><button type="button" class="save_button" 
+                                        onclick="savebutton('<%= recipe.Recipe_name%>', '<%= recipe.Recipe_Ingredients%>', 
+                                        '<%= recipe.Instructions%>', '<%= username%>')" value="<%= recipe.id%>">
                                         <i class="fa fa-regular fa-bookmark"></i>
                                     </button></td>
                                     <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->

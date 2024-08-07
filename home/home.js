@@ -75,7 +75,7 @@ router.get('/', async (request, response) => {
         } else {
             userLocation = request.session.postal || "m5b1r7";
         }
-        const python = spawn("/usr/bin/python3", [__dirname + '/../scrape_items.py', userLocation]);
+        const python = spawn("python3", [__dirname + '/../scrape_items.py', userLocation]);
 
         python.on('close', async (code) => {
             if (code !== 0) {
@@ -215,19 +215,21 @@ router.post('/', (req, res) => {
 })
 
 // Still needa add user_id with this
-async function saverecipe(recipe_name, recipe_description, recipe_url) {
+async function saverecipe(recipe_name, recipe_ingredients, recipe_description, username) {
     // Needa check if its logged in, if its not, then we send alert that only logged in users can save
-    const savequery = "INSERT INTO `recipes` (`recipe_name`, `description`, `url`) VALUES (?, ?, ?)"
+    const savequery = "INSERT INTO `recipes` (`recipe_name`, `ingredients`, `description`) VALUES (?, ?, ?)"
     
     try {
         const connection = await pool.getConnection();
-        const [results] = await connection.query(savequery, [recipe_name, recipe_description, recipe_url])
+        const [results] = await connection.query(savequery, [recipe_name, recipe_ingredients, recipe_description])
 
         console.log(`Successfully saved recipe: ${recipe_name}`)
         const retrieverecipequery = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
-        const retrieveuserquery = "SELECT user_id FROM user WHERE username = ?"
 
-        const storequery = "INSERT INTO `saved` ('recipe"
+        const storequery = "INSERT INTO `saved` ('recipe_id', 'username') VALUES (?, ?)"
+        const [recipe_result] = await connection.query(retrieverecipequery, recipe_name)
+
+        const [store_result] = await connection.query(storequery, [recipe_result[0], username])
     }
     catch (error) {
         console.log('Failed to save recipe')
@@ -235,16 +237,28 @@ async function saverecipe(recipe_name, recipe_description, recipe_url) {
 }
 
 // Needa think more about this
-async function deleterecipe(recipe_name, recipe_description, recipe_url) {
+async function deleterecipe(recipe_name, username) {
     // Needa check if its logged in, if its not, then we send alert that only logged in users can save
-    const savequery = "DELETE FROM `recipes`(`recipe_name`, `description`, `url`) VALUES (?, ?, ?)"
+    const get_id_query = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
+    const delete_saved_query = "DELETE FROM `recipes` WHERE recipe_id = ? AND username = ?"
+    const checksaved_query = "SELECT * FROM `saved` WHERE recipe_id = ?"
+    const deletequery = "DELETE FROM `recipes` WHERE recipe_id = ?"
     try {
         const connection = await pool.getConnection();
-        const [results] = await connection.query(savequery, [recipe_name, recipe_description, recipe_url])
-        console.log(`Successfully saved recipe: ${recipe_name}`)
+
+        // Get the recipe_id and delete from 'saved' table
+        const [get_id_results] = await connection.query(get_id_query, [recipe_name])
+        const [removeSavedResults] = await connection.query(delete_saved_query, [get_id_results[0], username])
+        // Run a query checking if recipe_id is still in 'saved'
+        const [checkresults] = await connection.query(checksaved_query, [recipe_id])
+        if (checkresults.length === 0) {
+            // If result is empty, then we run delete_query 
+            const [results] = await connection.query(deletequery, [recipe_id])
+        }
+        console.log(`Successfully unsaved recipe: ${recipe_name}`)
     }
     catch (error) {
-        console.log('Failed to save recipe')
+        console.log('Failed to unsave recipe')
     }
 }
 
