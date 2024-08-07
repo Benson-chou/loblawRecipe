@@ -135,6 +135,12 @@ button:hover {
     padding: 5px 10px;
 }
 
+.alert-success {
+    background-color: #00ff00;
+    color: var(--font-color);
+    padding: 5px 10px;
+}
+
 .items .item-image {
     height: 50px;
     transition: transform 0.25 ease;
