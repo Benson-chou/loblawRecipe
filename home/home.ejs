@@ -1,12 +1,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <title>Login</title>
+    <title>Home</title>
     <!-- the form awesome library is used to add icons to our form -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <!-- include the stylesheet file -->
     <link href="/home.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
         table, th, td {
             border: 1px solid black;
@@ -57,7 +58,9 @@
 </head>
 
 <body>
-    <div class="header-container">
+    <div id="preloader"></div>
+    <div id="recipe-loader"></div>
+    <div class="header-container" id="contents">
         <div class="header">
             <div class="logo">Loblaws Recipe</div>
             <ul class="links">
@@ -184,4 +187,29 @@
         </section>
     </div>
     
+    <script>
+        $(document).ready(function() {
+            console.log(sessionStorage.getItem('fromLoginPage'))
+            if (sessionStorage.getItem('fromLoginPage') === 'true') {
+                $(window).on("load", function () {
+                    setTimeout(function() {
+                        $("#preloader").fadeOut("slow");
+                        sessionStorage.removeItem('fromLoginPage');
+                    }, 1000); 
+                });
+            } else if (document.referrer.includes("home")) {
+                console.log("Load recipe");
+            } else {
+                console.log("Reload home page");
+                $("#preloader").hide(); // still shows for a split second but so far the best I can do
+                // $("#preloader").css("display", "none");
+                // $("#recipeLoader").css("display", "flex");
+                // $(window).on("load", function () {
+                //     setTimeout(function() {
+                //         $("#recipeLoader").fadeOut("slow");
+                //     }, 3000);
+                // });
+            }
+        });
+    </script>
 </body>

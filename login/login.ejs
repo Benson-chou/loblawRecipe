@@ -4,10 +4,12 @@
 	<title>Login</title>
 		<!-- the form awesome library is used to add icons to our form -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-		<!-- include the stylesheet file -->
-		<link href="/login.css" rel="stylesheet" type="text/css">
-  </head>
+	<!-- include the stylesheet file -->
+	<link href="/login.css" rel="stylesheet" type="text/css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
   <body>
+	<div id="preloader"></div>
 	<div class="header-container">
 	  <div class="header">
 		<div class="logo">Loblaws Recipe</div>
@@ -43,8 +45,17 @@
 			<%= message %>
 		  </div>
 		<% } %>
-		<input type="submit" name="login" value="Login">
+		<input type="submit" name="login" value="Login" id="loginButton">
 		<a href="../signup/" id="button" type="submit">Don't have an account yet? Join us!</a>
 	  </form>
 	</div>
+
+	<script>
+		$(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                $('#preloader').show();
+				sessionStorage.setItem('fromLoginPage', 'true');
+            });
+        });
+	</script>
   </body>

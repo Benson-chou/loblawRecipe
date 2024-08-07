@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
@@ -16,7 +16,9 @@ load_dotenv()
 import sys
 # pip install "cloud-sql-python-connector[pymysql]"
 
-driver = webdriver.Chrome()
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+driver = webdriver.Chrome(options=chrome_options)
 loblaw_items = []
 
 location = sys.argv[1]
