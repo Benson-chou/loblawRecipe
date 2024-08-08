@@ -19,30 +19,36 @@
             // validation image div
             var validationElement = document.getElementById('nameValidation');
             // Get form values
-            var newPass1 = document.forms["changePassword"]["newPassword"].value;
-            var newPass2 = document.forms["changePassword"]["2newPassword"].value;
+            var newPass1 = document.getElementById('newPassword').value;
+            var newPass2 = document.getElementById('twonewPassword').value;
+            console.log(newPass1)
+            console.log(newPass2)
+            console.log(newPass1 === newPass2)
             // Reset validation element styles
             validationElement.style.display = 'none';
             validationElement.className = 'validation-image';
-            // check if name2 exists
-            if (name2) {
+            // check if newPass2 exists
+            if (newPass2) {
+                console.log("hi")
                 validationElement.style.display = 'inline-block';
                 // Choose which class to add to the element
                 validationElement.className += 
                     (newPass1 == newPass2 ? ' validation-success' : ' validation-error');
+                if (newPass1 && newPass2 && newPass1 === newPass2) {
+                    enableSubmitButton();
+                    console.log('New password matches. Submit button enabled');
+                    return;
+                } else {
+                    alert("New passwords don't match. Please re-enter");
+                    return;
+                }
             }
-            if (newPass1 == newPass2) {
-                enableSubmitButton();
-                console.log('New password matches. Submit button enabled');
-                return;
-            } else {
-                alert("New passwords don't match. Please re-enter");
-                return;
-            }
+            
         }
         function enableSubmitButton(){
-            const submitButton = $('#passwordUpdate-btn');
-            submitButton.removeAttr('disabled');
+             var submitButton = document.getElementById('passwordUpdate-btn');
+             console.log(submitButton.attributes)
+            submitButton.removeAttribute('disabled');
         }
     </script>
 </head>
@@ -53,6 +59,7 @@
             <div class="logo">Loblaws Recipe</div>
             <ul class="links">
                 <li><%= username %></li>
+                <li><a href="../home/">Home</a></li>
                 <% if (!loggedin) { %> 
                     <li><a href="../login/">Log In</a></li>
                 <% } %>
@@ -77,7 +84,8 @@
                     pattern="^[A-CEGHJ-NPRSTVXYa-ceghj-nprstvxy]\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\s*\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\d$" required>
                 <% } else { %>
                     <label for="location">Location: </label>
-                    <input type="text" name="location" placeholder="m5b1r7" id="location" required>
+                    <input type="text" name="location" placeholder="m5b1r7" id="location" 
+                    pattern="^[A-CEGHJ-NPRSTVXYa-ceghj-nprstvxy]\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\s*\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\d$" required>
                 <% } %>
                 <input type="submit" name="locationChange" value="Update">
             </form>
@@ -94,13 +102,13 @@
             <% if (loggedin){%>
                 <form name="changePassword" action="/user/changePassword" method="post">
                     <label for="oldPassword">Old Password: </label>
-                    <input type="text" name="oldPassword" required>
+                    <input type="password" id="oldPassword" name="oldPassword" required>
                     <!-- Need function to check that new and re-enter are the same -->
                      <!-- https://stackoverflow.com/questions/21648374/check-if-two-fields-has-the-same-value-with-javascript -->
                     <label for="newPassword">New Password: </label>
-                    <input type="text" name="newPassword" onblur="checkNames()" required>
-                    <label for="2newPassword">Re-enter New Password: </label>
-                    <input type="text" name="2newPassword" onblur="checkNames()" required>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                    <label for="twonewPassword">Re-enter New Password: </label>
+                    <input type="password" id="twonewPassword" name="twonewPassword" onblur="checkNames()" required>
                     <div id="nameValidation" class="validation-image"></div>
                     <input type="submit" id="passwordUpdate-btn" value="Update" disabled>
                 </form> 

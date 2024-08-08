@@ -62,19 +62,21 @@ router.get('/', async(request, response) => {
 
 router.post('/location', async(req, res) => {
     try{
-        const {postalCode} = req.body;
-        let cleanPostal = postalCode.toLowerCase().replace(/\s+/g, '');
-        if (request.session.loggedin) {
-            request.session.postal = cleanPostal
+        const { location } = req.body;
+        console.log(location)
+        let cleanPostal = location.toLowerCase().replace(/\s+/g, '');
+        if (req.session.loggedin) {
+            req.session.postal = cleanPostal
             // Update the user data in database
             const connection = await pool.getConnection();
-            const [results] = await connection.query('UPDATE user SET preferred_location = ? WHERE username = ?', [cleanPostal, request.session.username]);
+            const [results] = await connection.query('UPDATE user SET preferred_location = ? WHERE username = ?', [cleanPostal, req.session.username]);
             console.log('Finished updating location: ', results);
-            connection.release();
+            connection.release()
         } else {
-            request.session.postal = cleanPostal
+            req.session.postal = cleanPostal
         }
         req.flash('updateSuccess', 'Successfully updated location!');
+        res.redirect('/user');
     }
     catch (error) {
         console.error('Error updating location: ', error);
@@ -86,17 +88,18 @@ router.post('/location', async(req, res) => {
 router.post('/allergies', async(req, res) => {
     try{
         const {allergies} = req.body;
-        if (request.session.loggedin) {
-            request.session.allergies = allergies
+        if (req.session.loggedin) {
+            req.session.allergies = allergies
             // Update the user data in database
             const connection = await pool.getConnection();
-            const [results] = await connection.query('UPDATE user SET allergies = ? WHERE username = ?', [cleanPostal, request.session.username]);
+            const [results] = await connection.query('UPDATE user SET allergies = ? WHERE username = ?', [allergies, req.session.username]);
             console.log('Finished updating allergies: ', results);
             connection.release();
         } else {
-            request.session.allergies = allergies
+            req.session.allergies = allergies
         }
         req.flash('updateSuccess', 'Successfully updated allergies!');
+        res.redirect('/user');
     }
     catch (error) {
         console.error('Error updating allergies: ', error);
@@ -107,14 +110,15 @@ router.post('/allergies', async(req, res) => {
 // TO-DO: This part haven't worked on yet
 router.post('/changePassword', async(req, res) => {
     try{
-        const {oldPassword, newPassword, re_enteredPassword} = req.body;
+        const {oldPassword, newPassword, twonewPassword} = req.body;
         const checkOldQuery = "SELECT * FROM user WHERE username = ? AND password = ?"
         const updatePassQuery = "UPDATE user SET password = ? WHERE username = ?"
         // Check if the oldPassword matches. If it doesn't, then return immediately and alert message
         const connection = await pool.getConnection();
+        console.log(oldPassword)
         const [checkOldResults] = await connection.query(checkOldQuery, [req.session.username, oldPassword])
         if (checkOldResults.length === 0) {
-            alert("Old Password Incorrect! Please retry")
+            req.flash('updateFail', 'Old Password Incorrect! Please retry');
             res.redirect('/user');
             return;
         }
@@ -122,6 +126,7 @@ router.post('/changePassword', async(req, res) => {
         await connection.query(updatePassQuery, [newPassword, req.session.username])
         console.log("Successfully updated password")
         req.flash('updateSuccess', 'Successfully updated password!');
+        res.redirect('/user');
     }
     catch (error) {
         console.error('Error updating password: ', error);
