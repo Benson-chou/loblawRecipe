@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1">
@@ -15,6 +16,7 @@
             padding: 8px;
         }
     </style>
+    <script type="text/javascript" src="home.js"></script>
     <script>
         function selectAll() {
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -35,26 +37,24 @@
         }
         function savebutton(recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
             var save_button = document.querySelector('.save_button');
-            console.log(save_button.children)
-            console.log(save_button.childNodes[0].nextSibling.className)
             var icon_class = save_button.childNodes[0].nextSibling.className
+            console.log(icon_class)
             // This works but not sure y regular and solid looks the same :(
             if (!loggedin) {
                 alert('Please Log in/Sign up to save ')
                 return;
             }
             if (icon_class === "fa fa-regular fa-bookmark") {
-                save_button.childNodes[0].nextSibling.className = "fa fa-solid fa-flag"
+                icon_class = "fa fa-solid fa-flag"
                 // Save the recipe here
                 saverecipe(recipe_name, recipe_ingredients, recipe_description, username)
             } else {
-                save_button.childNodes[0].nextSibling.className = "fa fa-regular fa-bookmark"
+                icon_class = "fa fa-regular fa-bookmark"
                 // Delete the recipe here 
                 deleterecipe(recipe_name, username)
             }
         }
     </script>
-    <script type="text/javascript" src="/home.js"></script>
 </head>
 
 <body>
@@ -134,16 +134,16 @@
                         <section id="parameters">
                         <label for="Creativity">Creativity: </label>
                         <div class="creativity-container">
-                            <input type="range" min="0" max="10" step="1" value="0" name="creativity" oninput="this.nextElementSibling.value = this.value">
+                            <input type="range" min="0" max="10" step="1" value="0" name="creativity" id="Creativity" oninput="this.nextElementSibling.value = this.value">
                             <output>0</output>
                         </div>
                         <label for="Budget">Budget (CAD): </label>
-                        <input type="number" step=any min="0" name = budget id="budget" required>
-                        <label for="additional"> Allergies:</label>
+                        <input type="number" step=any min="0" name = budget id="Budget" required>
+                        <label for="allergies"> Allergies:</label>
                         <% if(allergies) {%>
-                            <input type="text" name="allergies" value= "<%= allergies %>" >
+                            <input type="text" name="allergies" value= "<%= allergies %>" id="allergies">
                         <% } else{ %>
-                            <input type="text" name="allergies" value = 'None'>
+                            <input type="text" name="allergies" value = 'None' id="allergies">
                         <% } %>
                         </section>
                         <% if(item_message.length > 0) {%>
@@ -171,12 +171,13 @@
                             <% recipes.forEach(recipe=> { %>
                                 <tr>
                                     <td><%= recipe.Recipe_name %></td>
-                                    <td><%= recipe.Ingredients %></td>
+                                    <td><%- recipe.Ingredients %></td>
                                     <td><%= recipe.Instructions %></td>
+                                    <% test() %>
                                     <!-- Not sure if the variables work like this for onclick function -->
                                     <td><button type="button" class="save_button" 
-                                        onclick="savebutton('<%= recipe.Recipe_name%>', '<%= recipe.Recipe_Ingredients%>', 
-                                        '<%= recipe.Instructions%>', '<%= username%>')" value="<%= recipe.id%>">
+                                        onclick="savebutton('<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
+                                        value="<%= recipe.Recipe_name%>">
                                         <i class="fa fa-regular fa-bookmark"></i>
                                     </button></td>
                                     <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
@@ -190,29 +191,5 @@
         </section>
     </div>
     
-    <script>
-        $(document).ready(function() {
-            console.log(sessionStorage.getItem('fromLoginPage'))
-            if (sessionStorage.getItem('fromLoginPage') === 'true') {
-                $(window).on("load", function () {
-                    setTimeout(function() {
-                        $("#preloader").fadeOut("slow");
-                        sessionStorage.removeItem('fromLoginPage');
-                    }, 1000); 
-                });
-            } else if (document.referrer.includes("home")) {
-                console.log("Load recipe");
-            } else {
-                console.log("Reload home page");
-                $("#preloader").hide(); // still shows for a split second but so far the best I can do
-                // $("#preloader").css("display", "none");
-                // $("#recipeLoader").css("display", "flex");
-                // $(window).on("load", function () {
-                //     setTimeout(function() {
-                //         $("#recipeLoader").fadeOut("slow");
-                //     }, 3000);
-                // });
-            }
-        });
-    </script>
+    
 </body>

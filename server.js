@@ -8,7 +8,8 @@ const port = process.env.PORT;
 
 const loginRoute = require('./login/login');
 const signupRoute = require('./signup/signup');
-const homeRoute = require('./home/home');
+const home = require('./home/home');
+const homeRoute = home.router;
 const userRoute = require('./user/user');
 
 app.use(express.json());

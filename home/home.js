@@ -104,7 +104,7 @@ router.get('/', async (request, response) => {
                 // console.log(`request.session.postal: ${request.session.postal}`)
                 // console.log(`userLocation: ${userLocation}`);
                 // console.log(`userLocationPass: ${userLocationPass}`);
-                response.render(path.join(__dirname + '/home.ejs'), {location: userLocationPass, items : request.session.items, 
+                response.render(path.join(__dirname + '/home.ejs'), {test: test(), location: userLocationPass, items : request.session.items, 
                     allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
         
             } else {
@@ -140,7 +140,6 @@ router.post('/', (req, res) => {
     
     // This part is being skipped somehow
     python.stdout.on('data', (data) => {
-        console.log('result?');
         dataToSend = data.toString();
     });
     python.on('close', (code) => {
@@ -203,7 +202,8 @@ router.post('/', (req, res) => {
             } 
             let userAllergies = req.session.allergies ? req.session.allergies : 'None';
 
-            res.render(path.join(__dirname + '/home.ejs'), {location: '', items : req.session.items, 
+            // This part's location needs fix
+            res.render(path.join(__dirname + '/home.ejs'), {deleterecipe: deleterecipe, saverecipe: saverecipe, test: test, location: '', items : req.session.items, 
                 allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
                 item_message : req.flash('item_message'), recipes : recipes});
     
@@ -212,6 +212,7 @@ router.post('/', (req, res) => {
         }
     }
     generate()
+    return;
 })
 
 // Still needa add user_id with this
@@ -230,9 +231,11 @@ async function saverecipe(recipe_name, recipe_ingredients, recipe_description, u
         const [recipe_result] = await connection.query(retrieverecipequery, recipe_name)
 
         const [store_result] = await connection.query(storequery, [recipe_result[0], username])
+        return;
     }
     catch (error) {
         console.log('Failed to save recipe')
+        return;
     }
 }
 
@@ -256,10 +259,18 @@ async function deleterecipe(recipe_name, username) {
             const [results] = await connection.query(deletequery, [recipe_id])
         }
         console.log(`Successfully unsaved recipe: ${recipe_name}`)
+        return;
     }
     catch (error) {
         console.log('Failed to unsave recipe')
+        return;
     }
 }
+function test(){
+    console.log('hi')
+    return;
+}
 
-module.exports = router;
+module.exports = {
+    router, saverecipe, deleterecipe, test
+};
