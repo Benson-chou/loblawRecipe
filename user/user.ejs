@@ -43,13 +43,73 @@
                     return;
                 }
             }
-            
         }
         function enableSubmitButton(){
              var submitButton = document.getElementById('passwordUpdate-btn');
              console.log(submitButton.attributes)
             submitButton.removeAttribute('disabled');
         }
+        function savebutton(recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
+            var save_button = document.querySelector('.save_button');
+            var icon = save_button.querySelector('i');
+            // This works but not sure y regular and solid looks the same :(
+            if (!loggedin) {
+                alert('Please Log in/Sign up to save ')
+                return;
+            }
+            if (icon.classList.contains("fa-regular")) {
+                icon.classList.remove("fa-regular", "fa-bookmark")
+                icon.classList.add("fa-solid", "fa-flag")
+                // Save the recipe here by sending POST request
+                fetch('/home/save', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }, 
+                    body: JSON.stringify({
+                        recipe_name: recipe_name, 
+                        recipe_ingredients: recipe_ingredients, 
+                        recipe_description: recipe_description, 
+                        username: username
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Recipe saved: ', data);
+                })
+                .catch((error) => {
+                    console.log('Error saving recipe: ', error);
+                    // Revert icon if error
+                    icon.classList.remove("fa-solid", "fa-flag")
+                    icon.classList.add("fa-regular", "fa-bookmark")
+                });                
+            } else {
+                icon.classList.remove("fa-solid", "fa-flag")
+                icon.classList.add("fa-regular", "fa-bookmark")
+                // Delete the recipe by sending POST request
+                fetch('/home/delete', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }, 
+                    body: JSON.stringify({
+                        recipe_name: recipe_name, 
+                        username: username
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Recipe deleted:', data);
+                })
+                .catch((error) => {
+                    console.error('Error deleting recipe:', error);
+                    // Revert icon if error
+                    icon.classList.remove("fa-regular", "fa-bookmark")
+                    icon.classList.add("fa-solid", "fa-flag")
+                });
+            }
+        }
+
     </script>
 </head>
 
@@ -141,8 +201,9 @@
                                     <td><%= recipe.Recipe_name %></td>
                                     <td><%= recipe.Ingredients %></td>
                                     <td><%= recipe.Instructions %></td>
-                                    <td><button type="button" class="save_button" onclick="savebutton()" value="<%= recipe.id%>">
-                                        <i class="fa fa-regular fa-bookmark"></i>
+                                    <td><button type="button" class="save_button" onclick="savebutton('<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
+                                        value="<%= recipe.id%>">
+                                        <i class="fa fa-solid fa-flag"></i>
                                     </button></td>
                                     <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
                                      <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->

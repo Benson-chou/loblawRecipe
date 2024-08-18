@@ -50,14 +50,5 @@
 	  </form>
 	</div>
 
-	<script>
-		$(document).ready(function() {
-            $("#loginForm").on("submit", function(e) {
-				$(".login").fadeOut("slow", function() {
-					$("#preloader").fadeIn("fast", "swing");
-					sessionStorage.setItem("fromLoginPage", "true");
-				})
-            });
-        });
-	</script>
+	
   </body>

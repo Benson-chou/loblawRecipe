@@ -63,7 +63,6 @@ router.get('/', async(request, response) => {
 router.post('/location', async(req, res) => {
     try{
         const { location } = req.body;
-        console.log(location)
         let cleanPostal = location.toLowerCase().replace(/\s+/g, '');
         if (req.session.loggedin) {
             req.session.postal = cleanPostal
@@ -115,7 +114,6 @@ router.post('/changePassword', async(req, res) => {
         const updatePassQuery = "UPDATE user SET password = ? WHERE username = ?"
         // Check if the oldPassword matches. If it doesn't, then return immediately and alert message
         const connection = await pool.getConnection();
-        console.log(oldPassword)
         const [checkOldResults] = await connection.query(checkOldQuery, [req.session.username, oldPassword])
         if (checkOldResults.length === 0) {
             req.flash('updateFail', 'Old Password Incorrect! Please retry');
@@ -132,6 +130,58 @@ router.post('/changePassword', async(req, res) => {
         console.error('Error updating password: ', error);
         req.flash('updateFail', 'Failed to update password. Please try again.');
         res.redirect('/user');
+    }
+})
+
+router.post('/save', async (req, res) => {
+    const { recipe_name, recipe_ingredients, recipe_description, username } = req.body;
+    const savequery = "INSERT INTO `recipes` (`recipe_name`, `ingredients`, `description`) VALUES (?, ?, ?)"
+    
+    try {
+        const connection = await pool.getConnection();
+        const [results] = await connection.query(savequery, [recipe_name, recipe_ingredients, recipe_description])
+
+        console.log(`Successfully saved recipe: ${recipe_name}`)
+        const retrieverecipequery = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
+        const storequery = "INSERT INTO `saved` (`recipe_id`, `username`) VALUES (?, ?)"
+
+        const [recipe_result] = await connection.query(retrieverecipequery, recipe_name)
+        await connection.query(storequery, [recipe_result[0]['recipe_id'], username])
+        return res.status(200).json({ message: 'Recipe saved successfully' });
+    }
+    catch (error) {
+        console.log(error)
+        console.log('Failed to save recipe')
+        return res.status(500).json({message: 'Server Error'});
+    }
+});
+
+router.post('/delete', async (req, res) => {
+    const { recipe_name, username } = req.body;
+    const get_id_query = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
+    const delete_saved_query = "DELETE FROM `saved` WHERE recipe_id = ? AND username = ?"
+    const checksaved_query = "SELECT * FROM `saved` WHERE recipe_id = ?"
+    const deletequery = "DELETE FROM `recipes` WHERE recipe_id = ?"
+    try {
+        const connection = await pool.getConnection();
+
+        // Get the recipe_id and delete from 'saved' table
+        const [get_id_results] = await connection.query(get_id_query, [recipe_name])
+        var recipe_id = get_id_results[0]['recipe_id']
+        await connection.query(delete_saved_query, [recipe_id, username])
+        // Run a query checking if recipe_id is still in 'saved'
+        const [checkresults] = await connection.query(checksaved_query, [recipe_id])
+        if (checkresults.length === 0) {
+            // If result is empty, then we run delete_query 
+            await connection.query(deletequery, [recipe_id])
+        }
+        console.log(`Successfully unsaved recipe: ${recipe_name}`)
+        res.status(200).json({ message: 'Recipe deleted successfully'});
+    }
+    catch (error) {
+        console.log(error)
+        console.log('Failed to unsave recipe')
+        return res.status(500).json({ message: 'Server Error'});
     }
 })
 
