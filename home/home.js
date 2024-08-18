@@ -27,40 +27,6 @@ const pool = mysql.createPool({
 });
 
 router.use(flash())
-var username = 'test';
-// This is just for testing
-var items = [
-    {
-        id: 1,
-        itemname: 'Sword of Truth',
-        bonuspoints: 10,
-        condition: 'New'
-    },
-    {
-        id: 2,
-        itemname: 'Shield of Valor (Adding more to see how the box reacts)',
-        bonuspoints: 8,
-        condition: 'Used'
-    },
-    {
-        id: 3,
-        itemname: 'Helmet of Wisdom',
-        bonuspoints: 5,
-        condition: 'New'
-    },
-    {
-        id: 4,
-        itemname: 'Boots of Speed',
-        bonuspoints: 7,
-        condition: 'Used'
-    },
-    {
-        id: 5,
-        itemname: 'Cloak of Invisibility',
-        bonuspoints: 12,
-        condition: 'New'
-    }
-];
 
 // http://localhost:3000/home
 router.get('/', async (request, response) => {
