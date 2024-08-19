@@ -212,3 +212,18 @@ span.material-symbols-outlined {
     background-color: #00ff00;
     background-image: url('greencheck.png');
 }
+
+/* Ethelia: Added styling */
+.content-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.inputs {
+    border: #0048ff 2px solid;
+    background-color: #a8f2a8;
+}
+
+#SavedRecipes {
+    background-color: antiquewhite;
+}

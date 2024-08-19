@@ -48,8 +48,18 @@ router.get('/', async(request, response) => {
             request.flash('updateFail', 'Failed to query saved recipes. Please try again.');
             response.redirect('/user');
         }
-        response.render(path.join(__dirname + '/user.ejs'), {username: request.session.username, loggedin: request.session.loggedin, location: request.session.user.preferred_location, 
-            allergies: request.session.allergies, recipes: savedRecipesResults, updateFail : request.flash('updateFail'), 
+
+        let userLocation, userAllergies;
+        if (request.session.user !== undefined) {
+            userLocation = request.session.user.preferred_location;
+            userAllergies = request.session.user.allergies;
+        } else {
+            userLocation = request.session.postal;
+            userAllergies = request.session.allergies;
+        }
+
+        response.render(path.join(__dirname + '/user.ejs'), {username: request.session.username, loggedin: request.session.loggedin, location: userLocation, 
+            allergies: userAllergies, recipes: savedRecipesResults, updateFail : request.flash('updateFail'), 
             updateSuccess : request.flash('updateSuccess')
         })
     } else {

@@ -171,8 +171,23 @@
                             <% recipes.forEach(recipe=> { %>
                                 <tr>
                                     <td><%= recipe.Recipe_name %></td>
-                                    <td><%= recipe.Ingredients %></td>
-                                    <td><%= recipe.Instructions %></td>
+                                    <td>
+                                        <ul>
+                                        <% recipe.Ingredients.split("\n").forEach(function(ingredient) { %>
+                                            <% if (ingredient.trim()) { %>
+                                                <li><%= ingredient.trim() %></li>
+                                            <% } %>
+                                        <% }) %>
+                                        </ul>   
+                                    </td>
+
+                                    <td>
+                                        <% recipe.Instructions.split("\n").forEach(instruction => { %>
+                                            <% if (instruction.trim()) { %>
+                                                <p><%= instruction.trim() %></p>
+                                            <% } %>
+                                        <% }) %>
+                                    </td>
                                     <!-- Not sure if the variables work like this for onclick function -->
                                     <td><button type="button" class="save_button" 
                                         onclick="savebutton('<%= recipe.Recipe_name%>', '<%= recipe.Recipe_Ingredients%>', 
@@ -202,6 +217,7 @@
                 });
             } else if (document.referrer.includes("home")) {
                 console.log("Load recipe");
+                $("#preloader").hide();
             } else {
                 console.log("Reload home page");
                 $("#preloader").hide(); // still shows for a split second but so far the best I can do
