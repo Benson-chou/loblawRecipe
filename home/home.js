@@ -126,7 +126,8 @@ router.post('/', (req, res) => {
         ${req.body.itemCheckbox} with a budget of ${req.body.budget} and \
         avoid these allergies: ${req.body.allergies}. You do not have to include every ingredient I requested in every recipe. Use the ones you find suitable.\
         Please also include other ingredients needed in the recipe. Make sure to label each step of the instructions with 1., 2., 3., etc.\ 
-        Please output only the json form of Recipe_name, Ingredients, and Instructions. Ingredients and Intructions should both be one long string.
+        Please output only the json form of Recipe_name, Ingredients, and Instructions. Ingredients and Intructions should both be one long string with each item separated by a new line character. 
+        Please do not separate them with commas.
         ex: [{
         "Recipe_name": "One Pot Cheeseburger Pasta",
         "Ingredients": "1 lb ground beef
@@ -164,7 +165,7 @@ router.post('/', (req, res) => {
             let userAllergies = req.session.allergies ? req.session.allergies : 'None';
 
             // This part's location needs fix
-            res.render(path.join(__dirname + '/home.ejs'), {deleterecipe: deleterecipe, saverecipe: saverecipe, test: test, location: '', items : req.session.items, 
+            res.render(path.join(__dirname + '/home.ejs'), {location: '', items : req.session.items, 
                 allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
                 item_message : req.flash('item_message'), recipes : recipes});
     

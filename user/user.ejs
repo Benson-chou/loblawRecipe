@@ -136,56 +136,71 @@
         </div>
     </div>
     <div class="content-container">
-        <div class = "inputs">
-            <form id="locationForm" action="/user/location" method="post">
-                <% if (location) {%>
-                    <label for="location">Location: </label>
-                    <input type="text" name="location" placeholder="<%=location%>" id="location" 
-                    pattern="^[A-CEGHJ-NPRSTVXYa-ceghj-nprstvxy]\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\s*\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\d$" required>
-                <% } else { %>
-                    <label for="location">Location: </label>
-                    <input type="text" name="location" placeholder="m5b1r7" id="location" 
-                    pattern="^[A-CEGHJ-NPRSTVXYa-ceghj-nprstvxy]\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\s*\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\d$" required>
+        <div class="profile">
+            <div class="inputs">
+                <p>Edit profile</p>
+                <form id="locationForm" action="/user/location" method="post">
+                    <div class="location-field">
+                        <% if (location) {%>
+                                <label for="location">Location: </label>
+                                <input type="text" name="location" placeholder="<%=location%>" id="location"
+                                pattern="^[A-CEGHJ-NPRSTVXYa-ceghj-nprstvxy]\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\s*\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\d$" required>
+                        <% } else { %>
+                                <label for="location">Location: </label>
+                                <input type="text" name="location" placeholder="m5b1r7" id="location"
+                                pattern="^[A-CEGHJ-NPRSTVXYa-ceghj-nprstvxy]\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\s*\d[A-CEGHJ-NPRSTV-Za-ceghj-nprstv-z]\d$" required>
+                        <% } %>
+                        <input type="submit" name="locationChange" value="Update">
+                    </div>
+                </form>
+                <form id="allergiesForm" action="/user/allergies" method="post">
+                    <div class="allergies-field">
+                        <% if (allergies) {%>
+                                <label for="allergies">Allergies: </label>
+                                <input type="text" name="allergies" placeholder="<%=allergies%>" id="allergies">
+                        <% } else { %>
+                                <label for="allergies">Allergies: </label>
+                                <input type="text" name="allergies" placeholder="None" id="allergies">
+                        <% } %>
+                        <input type="submit" name="allergiesChange" value="Update">
+                    </div>
+                </form>
+                <% if (loggedin){%>
+                    <form name="changePassword" action="/user/changePassword" method="post">
+                        <div class="old-password">
+                            <label for="oldPassword">Old Password: </label>
+                            <input type="password" id="oldPassword" name="oldPassword" required>
+                        </div>
+                        <!-- Need function to check that new and re-enter are the same -->
+                         <!-- https://stackoverflow.com/questions/21648374/check-if-two-fields-has-the-same-value-with-javascript -->
+                        <div class="new-password1">
+                            <label for="newPassword">New Password: </label>
+                            <input type="password" id="newPassword" name="newPassword" required>
+                        </div>
+                        <div class="new-password2">
+                            <label for="twonewPassword">Re-enter New Password: </label>
+                            <input type="password" id="twonewPassword" name="twonewPassword" onblur="checkNames()" required>
+                            <div id="nameValidation" class="validation-image"></div>
+                            <input type="submit" id="passwordUpdate-btn" value="Update" disabled>
+                        </div>
+                    </form>
                 <% } %>
-                <input type="submit" name="locationChange" value="Update">
-            </form>
-            <form id="allergiesForm" action="/user/allergies" method="post">
-                <% if (allergies) {%>
-                    <label for="allergies">Allergies: </label>
-                    <input type="text" name="allergies" placeholder="<%=allergies%>" id="allergies">
-                <% } else { %>
-                    <label for="allergies">Allergies: </label>
-                    <input type="text" name="allergies" placeholder="None" id="allergies">
-                <% } %>
-                <input type="submit" name="allergiesChange" value="Update">
-            </form>
-            <% if (loggedin){%>
-                <form name="changePassword" action="/user/changePassword" method="post">
-                    <label for="oldPassword">Old Password: </label>
-                    <input type="password" id="oldPassword" name="oldPassword" required>
-                    <!-- Need function to check that new and re-enter are the same -->
-                     <!-- https://stackoverflow.com/questions/21648374/check-if-two-fields-has-the-same-value-with-javascript -->
-                    <label for="newPassword">New Password: </label>
-                    <input type="password" id="newPassword" name="newPassword" required>
-                    <label for="twonewPassword">Re-enter New Password: </label>
-                    <input type="password" id="twonewPassword" name="twonewPassword" onblur="checkNames()" required>
-                    <div id="nameValidation" class="validation-image"></div>
-                    <input type="submit" id="passwordUpdate-btn" value="Update" disabled>
-                </form> 
+            </div>
+            <% if (updateFail.length > 0) { %>
+                <div class="alert-fail">
+                    <span><%= updateFail %></span>
+                </div>
+            <% } %>
+            <% if (updateSuccess.length > 0) { %>
+                <div class="alert-success">
+                    <span><%= updateSuccess %></span>
+                </div>
             <% } %>
         </div>
-        <% if (updateFail.length > 0) { %>
-            <div class="alert-fail">
-                <%= updateFail %>
-            </div>
-        <% } %>
-        <% if (updateSuccess.length > 0) { %>
-            <div class="alert-success">
-                <%= updateSuccess %>
-            </div>
-        <% } %>
+        
         <% if (loggedin){%>
         <section id="SavedRecipes">
+            <span>My saved recipes</span>
             <div class="table">
                 <table id="headers">
                     <thead>
