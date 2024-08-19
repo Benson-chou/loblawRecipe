@@ -189,14 +189,14 @@ span.material-symbols-outlined {
     padding-left: 4px;
 }
 
-#preloader {
+/* #preloader {
     background: #21242d url(happy-bubu.gif) no-repeat center;
     height: 100vh;
     width: 100%;
     position: fixed;
     z-index: 100;
     opacity: 1;
-}
+} */
 
 /* #recipe-loader {
     display: none;

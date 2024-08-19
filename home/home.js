@@ -27,40 +27,6 @@ const pool = mysql.createPool({
 });
 
 router.use(flash())
-var username = 'test';
-// This is just for testing
-var items = [
-    {
-        id: 1,
-        itemname: 'Sword of Truth',
-        bonuspoints: 10,
-        condition: 'New'
-    },
-    {
-        id: 2,
-        itemname: 'Shield of Valor (Adding more to see how the box reacts)',
-        bonuspoints: 8,
-        condition: 'Used'
-    },
-    {
-        id: 3,
-        itemname: 'Helmet of Wisdom',
-        bonuspoints: 5,
-        condition: 'New'
-    },
-    {
-        id: 4,
-        itemname: 'Boots of Speed',
-        bonuspoints: 7,
-        condition: 'Used'
-    },
-    {
-        id: 5,
-        itemname: 'Cloak of Invisibility',
-        bonuspoints: 12,
-        condition: 'New'
-    }
-];
 
 // http://localhost:3000/home
 router.get('/', async (request, response) => {
@@ -101,9 +67,6 @@ router.get('/', async (request, response) => {
                 } else {
                     userLocationPass = request.session.postal || "m5b1r7 (default)";
                 }
-                // console.log(`request.session.postal: ${request.session.postal}`)
-                // console.log(`userLocation: ${userLocation}`);
-                // console.log(`userLocationPass: ${userLocationPass}`);
                 response.render(path.join(__dirname + '/home.ejs'), {location: userLocationPass, items : request.session.items, 
                     allergies: userAllergies, loggedin: true, username: request.session.username, item_message : request.flash('item_message'), recipes : {}});
         
@@ -140,7 +103,6 @@ router.post('/', (req, res) => {
     
     // This part is being skipped somehow
     python.stdout.on('data', (data) => {
-        console.log('result?');
         dataToSend = data.toString();
     });
     python.on('close', (code) => {
@@ -157,7 +119,6 @@ router.post('/', (req, res) => {
         geminiConfig
     });
 
-    // console.log()
     const generate = async () => {
         try {
             // Will send the dataToSend from optimization script to send in instead of itemCheckbox
@@ -191,7 +152,6 @@ router.post('/', (req, res) => {
             var responses = result.response.text();
             responses = responses.replace("```json", "");
             responses = responses.replace("```", "");
-            console.log(responses)
             const recipes = JSON.parse(responses);
             console.log(recipes);
             console.log(recipes.length)
@@ -203,7 +163,8 @@ router.post('/', (req, res) => {
             } 
             let userAllergies = req.session.allergies ? req.session.allergies : 'None';
 
-            res.render(path.join(__dirname + '/home.ejs'), {location: '', items : req.session.items, 
+            // This part's location needs fix
+            res.render(path.join(__dirname + '/home.ejs'), {deleterecipe: deleterecipe, saverecipe: saverecipe, test: test, location: '', items : req.session.items, 
                 allergies: userAllergies, loggedin: req.session.loggedin, username: req.session.username, 
                 item_message : req.flash('item_message'), recipes : recipes});
     
@@ -212,11 +173,11 @@ router.post('/', (req, res) => {
         }
     }
     generate()
+    return;
 })
 
-// Still needa add user_id with this
-async function saverecipe(recipe_name, recipe_ingredients, recipe_description, username) {
-    // Needa check if its logged in, if its not, then we send alert that only logged in users can save
+router.post('/save', async (req, res) => {
+    const { recipe_name, recipe_ingredients, recipe_description, username } = req.body;
     const savequery = "INSERT INTO `recipes` (`recipe_name`, `ingredients`, `description`) VALUES (?, ?, ?)"
     
     try {
@@ -225,22 +186,23 @@ async function saverecipe(recipe_name, recipe_ingredients, recipe_description, u
 
         console.log(`Successfully saved recipe: ${recipe_name}`)
         const retrieverecipequery = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
+        const storequery = "INSERT INTO `saved` (`recipe_id`, `username`) VALUES (?, ?)"
 
-        const storequery = "INSERT INTO `saved` ('recipe_id', 'username') VALUES (?, ?)"
         const [recipe_result] = await connection.query(retrieverecipequery, recipe_name)
-
-        const [store_result] = await connection.query(storequery, [recipe_result[0], username])
+        await connection.query(storequery, [recipe_result[0]['recipe_id'], username])
+        return res.status(200).json({ message: 'Recipe saved successfully' });
     }
     catch (error) {
+        console.log(error)
         console.log('Failed to save recipe')
+        return res.status(500).json({message: 'Server Error'});
     }
-}
+});
 
-// Needa think more about this
-async function deleterecipe(recipe_name, username) {
-    // Needa check if its logged in, if its not, then we send alert that only logged in users can save
+router.post('/delete', async (req, res) => {
+    const { recipe_name, username } = req.body;
     const get_id_query = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
-    const delete_saved_query = "DELETE FROM `recipes` WHERE recipe_id = ? AND username = ?"
+    const delete_saved_query = "DELETE FROM `saved` WHERE recipe_id = ? AND username = ?"
     const checksaved_query = "SELECT * FROM `saved` WHERE recipe_id = ?"
     const deletequery = "DELETE FROM `recipes` WHERE recipe_id = ?"
     try {
@@ -248,18 +210,22 @@ async function deleterecipe(recipe_name, username) {
 
         // Get the recipe_id and delete from 'saved' table
         const [get_id_results] = await connection.query(get_id_query, [recipe_name])
-        const [removeSavedResults] = await connection.query(delete_saved_query, [get_id_results[0], username])
+        var recipe_id = get_id_results[0]['recipe_id']
+        await connection.query(delete_saved_query, [recipe_id, username])
         // Run a query checking if recipe_id is still in 'saved'
         const [checkresults] = await connection.query(checksaved_query, [recipe_id])
         if (checkresults.length === 0) {
             // If result is empty, then we run delete_query 
-            const [results] = await connection.query(deletequery, [recipe_id])
+            await connection.query(deletequery, [recipe_id])
         }
         console.log(`Successfully unsaved recipe: ${recipe_name}`)
+        res.status(200).json({ message: 'Recipe deleted successfully'});
     }
     catch (error) {
+        console.log(error)
         console.log('Failed to unsave recipe')
+        return res.status(500).json({ message: 'Server Error'});
     }
-}
+})
 
 module.exports = router;
