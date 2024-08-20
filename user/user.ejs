@@ -58,9 +58,9 @@
                 alert('Please Log in/Sign up to save ')
                 return;
             }
-            if (icon.classList.contains("fa-regular")) {
-                icon.classList.remove("fa-regular", "fa-bookmark")
-                icon.classList.add("fa-solid", "fa-flag")
+            if (icon.classList.contains("bx-bookmark-heart")) {
+                icon.classList.remove("bx-bookmark-heart")
+                icon.classList.add("bxs-bookmark-heart")
                 // Save the recipe here by sending POST request
                 fetch('/home/save', {
                     method: 'POST', 
@@ -81,12 +81,12 @@
                 .catch((error) => {
                     console.log('Error saving recipe: ', error);
                     // Revert icon if error
-                    icon.classList.remove("fa-solid", "fa-flag")
-                    icon.classList.add("fa-regular", "fa-bookmark")
+                    icon.classList.remove("bxs-bookmark-heart");
+                    icon.classList.add("bx-bookmark-heart");
                 });                
             } else {
-                icon.classList.remove("fa-solid", "fa-flag")
-                icon.classList.add("fa-regular", "fa-bookmark")
+                icon.classList.remove("bxs-bookmark-heart");
+                icon.classList.add("bx-bookmark-heart");
                 // Delete the recipe by sending POST request
                 fetch('/home/delete', {
                     method: 'POST', 
@@ -105,18 +105,17 @@
                 .catch((error) => {
                     console.error('Error deleting recipe:', error);
                     // Revert icon if error
-                    icon.classList.remove("fa-regular", "fa-bookmark")
-                    icon.classList.add("fa-solid", "fa-flag")
+                    icon.classList.remove("bx-bookmark-heart")
+                    icon.classList.add("bxs-bookmark-heart")
                 });
             }
         }
 
-        function expand() {
-            const expandButton = document.querySelectorAll(".expand-toggle");
-            expandButton.forEach((toggle) => {
-                toggle.parentNode.classList.toggle("active");
-                console.log(toggle.parentNode.classList);
-            })
+        function expand(event) {
+            const toggleButton = event.currentTarget;
+            const card = toggleButton.parentNode;
+            card.classList.toggle('active');
+            console.log(card.classList);
         }
     </script>
 </head>
@@ -234,13 +233,14 @@
                                             <% }) %>
                                         </p>
                                     </div>
-                                    <button class="expand-toggle" onclick="expand()">
+                                    <button class="expand-toggle" onclick="expand(event)">
                                         <i class='bx bx-chevron-down' ></i>
                                         <i class='bx bx-x' ></i>
                                     </button>
                                     <button class="save_button" onclick="savebutton('<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
                                         value="<%= recipe.id%>">
-                                        <i class="fa fa-solid fa-flag"></i>
+                                        <!-- <i class="fa fa-solid fa-flag"></i> -->
+                                        <i class='bx bxs-bookmark-heart' ></i>
                                     </button>
                                 </div>
                             </div>

@@ -69,11 +69,6 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-button:hover {
-    cursor: pointer;
-    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);;
-}
-
 .alert-fail {
     background-color: rgb(247, 56, 56);
     color: var(--font-color);
@@ -210,6 +205,7 @@ button:hover {
 
 .instructions {
     display: none;
+    margin-bottom: 20px;
 }
 
 .instructions span {
@@ -271,6 +267,7 @@ i {
     border: none;
     cursor: pointer;
     transition: 0.2s ease-in-out;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);;
 }
 
 .expand-toggle:hover {
@@ -287,4 +284,17 @@ i {
 
 .card.active .expand-toggle .bx-chevron-down {
     display: none;
+}
+
+.save_button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.save_button:hover {
+    outline: none;
+    border: none;
+    transform: scale(1.05);
 }
