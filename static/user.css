@@ -195,6 +195,7 @@ body {
     border: 1px solid #bacdd8;
     padding: 30px;
     border-radius: 12px;
+    align-self: start;
 }
 
 .name {

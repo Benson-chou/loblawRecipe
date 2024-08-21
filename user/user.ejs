@@ -50,8 +50,8 @@
              console.log(submitButton.attributes)
             submitButton.removeAttribute('disabled');
         }
-        function savebutton(recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
-            var save_button = document.querySelector('.save_button');
+        function savebutton(event, recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
+            var save_button = event.currentTarget;
             var icon = save_button.querySelector('i');
             // This works but not sure y regular and solid looks the same :(
             if (!loggedin) {
@@ -206,12 +206,12 @@
         </div>
         
         <% if (loggedin){%>
-        <div id="SavedRecipes">
-            <span class="recipe">My saved recipes</span>
-            <div class="big-container">
-                <div class="cards-container">
-                    <% if(recipes) {%>
-                        <% recipes.forEach(recipe=> { %>
+            <div id="SavedRecipes">
+                <span class="recipe">My saved recipes</span>
+                <div class="big-container">
+                    <!-- <div class="cards-container"> -->
+                        <% if(recipes) {%>
+                            <% recipes.forEach(recipe=> { %>
                                 <div class="card">
                                     <img class="food" src="https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/generations/f5cdf89b-b899-4673-9228-f769890674fe-0.png" alt="Lago di Braies">
                                     <div class="details">
@@ -237,17 +237,16 @@
                                         <i class='bx bx-chevron-down' ></i>
                                         <i class='bx bx-x' ></i>
                                     </button>
-                                    <button class="save_button" onclick="savebutton('<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
+                                    <button class="save_button" onclick="savebutton(event, '<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
                                         value="<%= recipe.id%>">
                                         <!-- <i class="fa fa-solid fa-flag"></i> -->
                                         <i class='bx bxs-bookmark-heart' ></i>
                                     </button>
                                 </div>
-                            </div>
-                        <% }); %>
-                    <% } %>
+                            <% }); %>
+                        <% } %>
+                    <!-- </div> -->
                 </div>
             </div>
         <% } %>
-    </div>
 </body>

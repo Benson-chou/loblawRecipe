@@ -6,6 +6,7 @@
     <!-- the form awesome library is used to add icons to our form -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- include the stylesheet file -->
     <link href="/home.css" rel="stylesheet" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -34,17 +35,18 @@
                 })
             }
         }
-        function savebutton(recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
-            var save_button = document.querySelector('.save_button');
+        function savebutton(event, recipe_name, recipe_ingredients, recipe_description, loggedin, username) {
+            var save_button = event.currentTarget;
             var icon = save_button.querySelector('i');
             // This works but not sure y regular and solid looks the same :(
             if (!loggedin) {
                 alert('Please Log in/Sign up to save ')
                 return;
             }
-            if (icon.classList.contains("fa-regular")) {
-                icon.classList.remove("fa-regular", "fa-bookmark")
-                icon.classList.add("fa-solid", "fa-flag")
+            if (icon.classList.contains("bx-bookmark-heart")) {
+                icon.classList.remove("bx-bookmark-heart")
+                icon.classList.add("bxs-bookmark-heart")
+                console.log(icon.classList);
                 // Save the recipe here by sending POST request
                 fetch('/home/save', {
                     method: 'POST', 
@@ -65,12 +67,13 @@
                 .catch((error) => {
                     console.log('Error saving recipe: ', error);
                     // Revert icon if error
-                    icon.classList.remove("fa-solid", "fa-flag")
-                    icon.classList.add("fa-regular", "fa-bookmark")
+                    icon.classList.remove("bxs-bookmark-heart")
+                    icon.classList.add("bx-bookmark-heart")
                 });                
             } else {
-                icon.classList.remove("fa-solid", "fa-flag")
-                icon.classList.add("fa-regular", "fa-bookmark")
+                icon.classList.remove("bxs-bookmark-heart")
+                icon.classList.add("bx-bookmark-heart")
+                console.log(icon.classList);
                 // Delete the recipe by sending POST request
                 fetch('/home/delete', {
                     method: 'POST', 
@@ -89,10 +92,17 @@
                 .catch((error) => {
                     console.error('Error deleting recipe:', error);
                     // Revert icon if error
-                    icon.classList.remove("fa-regular", "fa-bookmark")
-                    icon.classList.add("fa-solid", "fa-flag")
+                    icon.classList.remove("bx-bookmark-heart")
+                    icon.classList.add("bxs-bookmark-heart")
                 });
             }
+        }
+
+        function expand(event) {
+            const toggleButton = event.currentTarget;
+            const card = toggleButton.parentNode;
+            card.classList.toggle('active');
+            console.log(card.classList);
         }
     </script>
 </head>
@@ -204,52 +214,50 @@
         </div>
 
         <!-- Where the response will be displayed -->
-        <div class="recipes">
-            <div class="table">
-                <table id="headers">
-                    <thead>
-                        <th id="recipename">Recipe Name</th>
-                        <th id="ingredients">Ingredients</th>
-                        <th id="instuctions">Instructions</th>
-                        <th id="save">Save</th>
-                    </thead>
-                    <tbody>
-                        <% if(recipes.length > 0) {%>
-                            <% recipes.forEach(recipe=> { %>
-                                <tr>
-                                    <td><%= recipe.Recipe_name %></td>
-                                    <td>
-                                        <ul>
+        <% if(recipes.length > 0) {%>
+            <div class="recipes">
+                <div class="big-container">         
+                    <p id="recipe-title">My recipes</p>
+                    <!-- <div class="cards-container"> -->
+                        <% recipes.forEach(recipe=> { %>
+                            <div class="card">
+                                <img class="food" src="https://pub-3626123a908346a7a8be8d9295f44e26.r2.dev/generations/f5cdf89b-b899-4673-9228-f769890674fe-0.png" alt="Lago di Braies">
+                                <div class="details">
+                                    <div class="name"><%= recipe.Recipe_name %></div>
+                                    <p class="ingredients">Ingredients</p>
+                                    <ul class="ingredient-list">
                                         <% recipe.Ingredients.split("\n").forEach(function(ingredient) { %>
                                             <% if (ingredient.trim()) { %>
                                                 <li><%= ingredient.trim() %></li>
                                             <% } %>
                                         <% }) %>
-                                        </ul>   
-                                    </td>
-
-                                    <td>
+                                    </ul>
+                                    <p class="instructions">
+                                        <span id="instructions-title">Instructions</span>
                                         <% recipe.Instructions.split("\n").forEach(instruction => { %>
                                             <% if (instruction.trim()) { %>
-                                                <p><%= instruction.trim() %></p>
+                                                <span><%= instruction.trim() %></span>
                                             <% } %>
                                         <% }) %>
-                                    </td>
-                                    <!-- Not sure if the variables work like this for onclick function -->
-                                    <td><button type="button" class="save_button" 
-                                        onclick="savebutton('<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
+                                    </p>
+                                </div>
+                                    <button class="expand-toggle" onclick="expand(event)">
+                                        <i class='bx bx-chevron-down' ></i>
+                                        <i class='bx bx-x' ></i>
+                                    </button>
+                                    
+                                    <button class="save_button" onclick="savebutton(event, '<%= recipe.Recipe_name%>', `<%= recipe.Ingredients%>`, `<%= recipe.Instructions%>`, '<%= loggedin%>', '<%= username%>')" 
                                         value="<%= recipe.Recipe_name%>">
-                                        <i class="fa fa-regular fa-bookmark"></i>
-                                    </button></td>
-                                    <!-- Before saved: <i class="fa fa-regular fa-bookmark"></i> -->
-                                     <!-- After saved: <i class="fa fa-solid fa-bookmark"></i> -->
-                                </tr>
-                            <% }); %>
-                        <% } %>
-                    </tbody>
-                </table>
+                                        <!-- <i class="fa fa-regular fa-bookmark"></i> -->
+                                        <!-- <i class="fa fa-solid fa-flag"></i> -->
+                                        <i class='bx bx-bookmark-heart' ></i>
+                                    </button>
+                            </div>
+                        <% }); %>
+                    <!-- </div> -->
+                </div>
             </div>
-        </div>
+        <% } %>
     </div>
     
     <script>
