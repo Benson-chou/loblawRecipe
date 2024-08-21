@@ -1,6 +1,7 @@
 :root {
-    --theme-color: #3274d6;
-    --font-color: #ffffff
+    /* --theme-color: #3274d6; */
+    --theme-color: #f17777;
+    --font-color: #ffffff;
 }
 
 * {
@@ -11,12 +12,13 @@
 }
 
 body {
-    background-color: rgba(10, 65, 10, 0.75);
+    /* background-image: linear-gradient(215deg, #ff7878 0%, #367d3e 74%) */
+    background-image: linear-gradient(315deg, #ffabab 0%, #7ee8fa 74%);
 }
 
 .signup {
     width: 400px;
-    background-color: var(--font-color);
+    background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     margin: 100px auto;
 }
@@ -53,7 +55,7 @@ body {
     width: 75%;
     padding: 15px;
     margin: 15px 0;
-    background-color: var(--theme-color);
+    background-image: linear-gradient(313deg, #f9c5d1 0%, #9795ef 94%);
     border: 0;
     cursor: pointer;
     font-weight: bold;
@@ -64,15 +66,15 @@ body {
 
 .signup form [type="text"]:focus,
 .signup form [type="password"]:focus {
-    border: 2.5px solid #22cfc9;
     outline: transparent;
     border-radius: 6px;
-    box-shadow: 0 0 10px #719ECE;
+    box-shadow: 1.5px 1px 3px #15ab47;
 }
 
 .signup form input[type="submit"]:hover {
-  background-color: #1eb4af;
-    transition: background-color 0.2s;
+  /* background-image: linear-gradient(83deg, #f9c5d1 10%, #9795ef 94%); */
+    /* background-image: linear-gradient(83deg, #fbd6de 18%, #72e7f4 56%, #c4c2f6 84%); */
+    background-image: linear-gradient(87deg, #ffff94, #f9c5d1 35%, #9795ef 99%);
 }
 
 .header {
@@ -87,7 +89,7 @@ body {
     align-items: center;
     color: var(--font-color);
     font-weight: bold;
-    font-size: large;
+    font-size: x-large;
 }
 
 .header .links {
@@ -141,5 +143,7 @@ body {
     width: 90%;
     height: 85vh;
     object-fit: cover;
-    box-shadow: 6px 6px 0px 15px rgb(1, 70, 1);
+    box-shadow: 6px 6px 0px 15px rgba(1, 70, 1, 0.55);
 }
+
+
