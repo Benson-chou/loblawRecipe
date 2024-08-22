@@ -9,8 +9,10 @@
         <script src="https://kit.fontawesome.com/92bcc0a615.js" crossorigin="anonymous"></script>
         <!-- include the stylesheet file -->
         <link href="/signup.css" rel="stylesheet" type="text/css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
+		<div id="preloader"></div>
 		<div class="header-container">
 			<div class="header">
 				<div class="logo">Loblaws Recipe</div>
@@ -67,5 +69,14 @@
 				</form>
 			</div>
 		</div>
+		<script>
+			$(document).ready(function() {
+				$("#signupForm").on("submit", function() {
+					$(".signup").fadeOut("slow", function() {
+						$("#preloader").fadeIn("slow", "swing");
+					})
+				})
+			})
+		</script>
 	</body>
 </html>

@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- include the stylesheet file -->
     <link href="/user.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
         table, th, td {
             border: 1px solid black;
@@ -121,12 +122,13 @@
 </head>
 
 <body>
+    <div id="preloader"></div>
     <div class="header-container">
         <div class="header">
             <div class="logo">Loblaws Recipe</div>
             <ul class="links">
                 <li><%= username %></li>
-                <li><a href="../home/">Home</a></li>
+                <li><a href="../home/" id="home">Home</a></li>
                 <% if (!loggedin) { %> 
                     <li><a href="../login/">Log In</a></li>
                 <% } %>
@@ -249,4 +251,13 @@
                 </div>
             </div>
         <% } %>
+
+        <script>
+            $(document).ready(function() {
+                $("#home").on("click", function() {
+                    $("#preloader").fadeIn("slow", "swing");
+                })
+
+            });
+        </script>
 </body>
