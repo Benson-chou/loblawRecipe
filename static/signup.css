@@ -90,6 +90,7 @@ body {
     color: var(--font-color);
     font-weight: bold;
     font-size: x-large;
+    margin-left: 10px;
 }
 
 .header .links {

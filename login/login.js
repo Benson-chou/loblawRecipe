@@ -35,18 +35,18 @@ router.post('/', async (req, res) => {
 
     try {
         const connection = await pool.getConnection();
-    const [results] = await connection.query('SELECT * FROM user WHERE username = ? AND password = ?', [username, password]);
-    if (results.length > 0) {
-        req.session.user = results[0];
-        req.session.username = username;
-        // Needs to be set before redirect to save session info
-        req.session.loggedin = true;
-        res.redirect('/home');
-    } else {
-        req.flash('message', 'Incorrect Username and/or Password')
-        res.redirect('/');
-    } connection.release();
-}
+        const [results] = await connection.query('SELECT * FROM user WHERE username = ? AND password = ?', [username, password]);
+        if (results.length > 0) {
+            req.session.user = results[0];
+            req.session.username = username;
+            // Needs to be set before redirect to save session info
+            req.session.loggedin = true;
+            res.redirect('/home');
+        } else {
+            req.flash('message', 'Incorrect Username and/or Password')
+            res.redirect('/login');
+        } connection.release();
+        }
     catch (error) {
         console.error('Error logging in:', error);
         req.flash('message', 'Failed to login user. Please try again.');
