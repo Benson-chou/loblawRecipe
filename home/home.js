@@ -41,7 +41,7 @@ router.get('/', async (request, response) => {
         } else {
             userLocation = request.session.postal || "m5b1r7";
         }
-        const python = spawn("python3", [__dirname + '/../scrape_items.py', userLocation]);
+        const python = spawn("/usr/bin/python3", [__dirname + '/../scrape_items.py', userLocation]);
 
         python.on('close', async (code) => {
             if (code !== 0) {

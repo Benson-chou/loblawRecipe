@@ -260,32 +260,29 @@
         <% } %>
     </div>
     
-    <!-- <script>
+    <script>
         $(document).ready(function() {
-            console.log(sessionStorage.getItem('fromLoginPage'))
-            if (sessionStorage.getItem('fromLoginPage') === 'true') {
+            // console.log(sessionStorage.getItem('fromLoginPage'));
+            // if (sessionStorage.getItem('fromLoginPage') === 'true') {
+            //     $(window).on("load", function () {
+            //         setTimeout(function() {
+            //             $("#preloader").fadeOut("slow");
+            //             sessionStorage.removeItem('fromLoginPage');
+            //         }, 1000); 
+            //     });
+            // } else {
+            //     $("#preloader").hide(); 
+            // }
+
+            $("#itemsForm").on("submit", function(e) {
+                $("#recipe-loader").fadeIn("slow", "swing");
                 $(window).on("load", function () {
+                    // $("#preloader").hide();
                     setTimeout(function() {
-                        $("#preloader").fadeOut("slow");
-                        sessionStorage.removeItem('fromLoginPage');
-                    }, 1000); 
-                });
-            } else if (document.referrer.includes("home")) {
-                console.log("Load recipe");
-                $("#preloader").hide();
-            } else {
-                console.log("Reload home page");
-                $("#preloader").hide(); 
-                
-                // still shows for a split second but so far the best I can do
-                // $("#preloader").css("display", "none");
-                // $("#recipeLoader").css("display", "flex");
-                // $(window).on("load", function () {
-                //     setTimeout(function() {
-                //         $("#recipeLoader").fadeOut("slow");
-                //     }, 3000);
-                // });
-            }
+                        $("#recipe-loader").fadeOut("slow");
+                    }, 3000);
+                })   
+            });
         });
-    </script> -->
+    </script>
 </body>

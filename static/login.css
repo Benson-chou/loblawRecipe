@@ -147,7 +147,7 @@
 
   #preloader {
     display: none;
-    background: #21242d url(bubu-dishes.gif) no-repeat center;
+    background: rgba(255, 255, 255, 0.5) url(happy-bubu.gif) no-repeat center;
     height: 100vh;
     width: 100%;
     position: fixed;
