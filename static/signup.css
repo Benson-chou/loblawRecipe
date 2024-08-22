@@ -146,4 +146,13 @@ body {
     box-shadow: 6px 6px 0px 15px rgba(1, 70, 1, 0.55);
 }
 
+#signupForm #button {
+    color: rgb(163, 165, 168);
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 15px;
+}
 
+#signupForm #button:hover {
+    color: #138539;
+}
