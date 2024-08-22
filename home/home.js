@@ -41,7 +41,7 @@ router.get('/', async (request, response) => {
         } else {
             userLocation = request.session.postal || "m5b1r7";
         }
-        const python = spawn("/usr/bin/python3", [__dirname + '/../scrape_items.py', userLocation]);
+        const python = spawn("python3", [__dirname + '/../scrape_items.py', userLocation]);
 
         python.on('close', async (code) => {
             if (code !== 0) {
@@ -179,7 +179,7 @@ router.post('/', (req, res) => {
 
 router.post('/save', async (req, res) => {
     const { recipe_name, recipe_ingredients, recipe_description, username } = req.body;
-    const savequery = "INSERT INTO `recipes` (`recipe_name`, `ingredients`, `description`) VALUES (?, ?, ?)"
+    const savequery = "INSERT IGNORE INTO `recipes` (`recipe_name`, `ingredients`, `description`) VALUES (?, ?, ?)"
     
     try {
         const connection = await pool.getConnection();
@@ -187,7 +187,7 @@ router.post('/save', async (req, res) => {
 
         console.log(`Successfully saved recipe: ${recipe_name}`)
         const retrieverecipequery = "SELECT recipe_id FROM recipes WHERE recipe_name = ?"
-        const storequery = "INSERT INTO `saved` (`recipe_id`, `username`) VALUES (?, ?)"
+        const storequery = "INSERT IGNORE INTO `saved` (`recipe_id`, `username`) VALUES (?, ?)"
 
         const [recipe_result] = await connection.query(retrieverecipequery, recipe_name)
         await connection.query(storequery, [recipe_result[0]['recipe_id'], username])

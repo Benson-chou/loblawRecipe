@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
         } else {
             // Need to strip white space, change into lower case, make sure it is a valid postal code before we save to database
             let cleanPostal = postalCode.toLowerCase().replace(/\s+/g, '');
-            connection.query('INSERT INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)',
+            connection.query('INSERT IGNORE INTO `user` (`username`, `password`, `preferred_location`, `allergies`) VALUES (?, ?, ?, ?)',
             [username, password, cleanPostal, allergies]);
             req.session.username = username;
             req.session.loggedin = true;
