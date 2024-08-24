@@ -6,6 +6,11 @@ const flash = require('connect-flash')
 const {Connector} = require('@google-cloud/cloud-sql-connector');
 const dotenv = require('dotenv');
 dotenv.config();
+const fs = require('fs');
+
+const credentials = process.env.GOOGLE_APPLICATION_CREDENTIAL;
+fs.writeFileSync('/tmp/credentials.json', credentials);
+process.env.GOOGLE_APPLICATION_CREDENTIAL = '/tmp/credentials.json';
 
 const connector = new Connector();
 const clientOpts = connector.getOptions({

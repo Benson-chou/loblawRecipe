@@ -9,6 +9,11 @@ const router = express.Router();
 const mysql = require('mysql2/promise');
 const flash = require('connect-flash');
 const { spawn } = require('child_process');
+const fs = require('fs');
+
+const credentials = process.env.GOOGLE_APPLICATION_CREDENTIAL;
+fs.writeFileSync('/tmp/credentials.json', credentials);
+process.env.GOOGLE_APPLICATION_CREDENTIAL = '/tmp/credentials.json';
 
 const googleAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
