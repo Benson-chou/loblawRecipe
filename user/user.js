@@ -15,10 +15,11 @@ if (credentials64) {
     // const credentials = JSON.parse(
     //     Buffer.from(credentials64, 'base64').toString('utf8')
     // );
+    const path = '/tmp/credentials.json'
     const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
-    fs.writeFileSync('/tmp/credentials.json', credentials, 'utf8');
+    fs.writeFileSync(path, credentials, 'utf8');
     const auth = new GoogleAuth({
-        credentials: credentials,
+        credentials: path,
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
   } else {
