@@ -5,10 +5,11 @@
   "main": "/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --env-file=.env server.js",
+    "start": "node server.js",
     "build": "npm run start",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "dev": "nodemon --env-file=.env server.js"
   },
   "repository": {
     "type": "git",
