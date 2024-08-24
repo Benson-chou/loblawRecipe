@@ -11,9 +11,9 @@ const flash = require('connect-flash');
 const { spawn } = require('child_process');
 const fs = require('fs');
 
-const credentials = process.env.GOOGLE_APPLICATION_CREDENTIAL;
-if (credentials) {
-    const credentials = Buffer.from(credentials, 'base64').toString('utf8');
+const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIAL;
+if (credentials64) {
+    const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
     fs.writeFileSync('/tmp/credentials.json', credentials, 'utf8');
     process.env.GOOGLE_APPLICATION_CREDENTIAL = '/tmp/credentials.json';
   } else {
