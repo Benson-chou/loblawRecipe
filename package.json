@@ -36,5 +36,12 @@
   },
   "devDependencies": {
     "gh-pages": "^6.1.1"
+  },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "engines": {
+    "node": "20.12.2"
   }
 }
