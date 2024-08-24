@@ -17,6 +17,7 @@ if (credentials64) {
     const path = '/tmp/credentials.json'
     const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
     fs.writeFileSync(path, credentials, 'utf8');
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = path;
     const auth = new GoogleAuth({
         keyFile: path,
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
