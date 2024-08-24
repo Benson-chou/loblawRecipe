@@ -14,7 +14,8 @@ if (credentials64) {
     const credentials = JSON.parse(
         Buffer.from(credentials64, 'base64').toString('utf8')
     );
-    fs.writeFileSync('/tmp/credentials.json', credentials, 'utf8');
+    const credentialsString = JSON.stringify(credentials, null, 2);
+    fs.writeFileSync('/tmp/credentials.json', credentialsString, 'utf8');
     process.env.GOOGLE_APPLICATION_CREDENTIALS = '/tmp/credentials.json';
   } else {
     console.error('GOOGLE_APPLICATION_CREDENTIALS is not set.');
