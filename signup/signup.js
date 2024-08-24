@@ -10,7 +10,9 @@ const fs = require('fs');
 
 const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 if (credentials64) {
-    const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
+    const credentials = JSON.parse(
+        Buffer.from(credentials64, 'base64').toString('utf8')
+    );
     fs.writeFileSync('/tmp/credentials.json', credentials, 'utf8');
     process.env.GOOGLE_APPLICATION_CREDENTIALS = '/tmp/credentials.json';
   } else {
