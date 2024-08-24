@@ -9,8 +9,13 @@ dotenv.config();
 const fs = require('fs');
 
 const credentials = process.env.GOOGLE_APPLICATION_CREDENTIAL;
-fs.writeFileSync('/tmp/credentials.json', credentials);
-process.env.GOOGLE_APPLICATION_CREDENTIAL = '/tmp/credentials.json';
+if (credentials) {
+    const credentials = Buffer.from(credentials, 'base64').toString('utf8');
+    fs.writeFileSync('/tmp/credentials.json', credentials, 'utf8');
+    process.env.GOOGLE_APPLICATION_CREDENTIAL = '/tmp/credentials.json';
+  } else {
+    console.error('GOOGLE_APPLICATION_CREDENTIAL is not set.');
+  }
 
 const connector = new Connector();
 const clientOpts = connector.getOptions({
