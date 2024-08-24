@@ -11,13 +11,13 @@ const flash = require('connect-flash');
 const { spawn } = require('child_process');
 const fs = require('fs');
 
-const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIAL;
+const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 if (credentials64) {
     const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
     fs.writeFileSync('/tmp/credentials.json', credentials, 'utf8');
-    process.env.GOOGLE_APPLICATION_CREDENTIAL = '/tmp/credentials.json';
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = '/tmp/credentials.json';
   } else {
-    console.error('GOOGLE_APPLICATION_CREDENTIAL is not set.');
+    console.error('GOOGLE_APPLICATION_CREDENTIALS is not set.');
   }
 
 const googleAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
