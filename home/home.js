@@ -12,7 +12,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const { GoogleAuth } = require('google-auth-library');
 
-const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64;
 if (credentials64) {
     const credentials = JSON.parse(
         Buffer.from(credentials64, 'base64').toString('utf8')
