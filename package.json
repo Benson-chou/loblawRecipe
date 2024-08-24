@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --env-file=.env server.js",
     "build": "npm run start",
-    "predeploy": "npm run build", 
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "repository": {
@@ -33,5 +33,8 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.10.3",
     "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }
