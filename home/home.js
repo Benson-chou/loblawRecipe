@@ -10,6 +10,7 @@ const mysql = require('mysql2/promise');
 const flash = require('connect-flash');
 const { spawn } = require('child_process');
 const fs = require('fs');
+const { GoogleAuth } = require('google-auth-library');
 
 const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 if (credentials64) {

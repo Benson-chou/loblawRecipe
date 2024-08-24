@@ -7,6 +7,7 @@ const {Connector} = require('@google-cloud/cloud-sql-connector');
 const dotenv = require('dotenv');
 dotenv.config();
 const fs = require('fs');
+const { GoogleAuth } = require('google-auth-library');
 
 const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 console.log(credentials64);
