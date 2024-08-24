@@ -14,16 +14,16 @@ const { GoogleAuth } = require('google-auth-library');
 
 const credentials64 = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 if (credentials64) {
-    // const credentials = JSON.parse(
-    //     Buffer.from(credentials64, 'base64').toString('utf8')
-    // );
-    const path = '/tmp/credentials.json'
-    const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
-    fs.writeFileSync(path, credentials, 'utf8');
-    const auth = new GoogleAuth({
-        credentials: path,
-        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-    });
+    const credentials = JSON.parse(
+        Buffer.from(credentials64, 'base64').toString('utf8')
+    );
+    // const path = '/tmp/credentials.json'
+    // const credentials = Buffer.from(credentials64, 'base64').toString('utf8');
+    // fs.writeFileSync(path, credentials, 'utf8');
+    // const auth = new GoogleAuth({
+    //     credentials: path,
+    //     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    // });
   } else {
     console.error('GOOGLE_APPLICATION_CREDENTIALS is not set.');
   }
